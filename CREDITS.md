@@ -37,6 +37,13 @@ Be the first to sponsor CaptionAll.
 <p>&nbsp;</p>
 
 ## License
+Multiple licenses are present.
+
+### Main Application
+GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007
+
+### Libraries
+MIT
 
 <p>&nbsp;</p>
 
