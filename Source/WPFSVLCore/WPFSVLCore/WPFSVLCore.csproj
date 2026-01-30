@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <UseWPF>true</UseWPF>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;IDE0004;IDE0027;IDE0049;IDE1006</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NoWarn>1701;1702;IDE0004;IDE0027;IDE0049;IDE1006</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Album Art Display\NoArtwork.png" />
+    <None Remove="Album Art Display\Overlay.png" />
+    <None Remove="Album Art Display\Underlay.png" />
+    <None Remove="Album Art Display\WPFSoundVisualizationLib.AlbumArtDisplay.Icon.Large.png" />
+    <None Remove="Spectrum Analyzer\WPFSoundVisualizationLib.SpectrumAnalyzer.Icon.Large.png" />
+    <None Remove="WaveForm Timeline\WPFSoundVisualizationLib.WaveformTimeline.Icon.Large.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Album Art Display\NoArtwork.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Album Art Display\Overlay.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Album Art Display\Underlay.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <EmbeddedResource Include="Album Art Display\WPFSoundVisualizationLib.AlbumArtDisplay.Icon.Large.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Spectrum Analyzer\WPFSoundVisualizationLib.SpectrumAnalyzer.Icon.Large.png" />
+    <EmbeddedResource Include="WaveForm Timeline\WPFSoundVisualizationLib.WaveformTimeline.Icon.Large.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NAudio" Version="2.0.1" />
+    <PackageReference Include="taglib-sharp-netstandard2.0" Version="2.1.0" />
+  </ItemGroup>
+
+</Project>

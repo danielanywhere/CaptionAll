@@ -1,0 +1,83 @@
+/*
+* Copyright (c). 2020-2026 Daniel Patterson, MCSD (danielanywhere).
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+* 
+*/
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+
+namespace MediaPlayerWPFUC
+{
+	public class TextBoxBehavior
+	{
+		public static bool GetSelectAllTextOnFocus(TextBox textBox)
+		{
+			return (bool)textBox.GetValue(SelectAllTextOnFocusProperty);
+		}
+
+		public static void SetSelectAllTextOnFocus(TextBox textBox, bool value)
+		{
+			textBox.SetValue(SelectAllTextOnFocusProperty, value);
+		}
+
+		public static readonly DependencyProperty SelectAllTextOnFocusProperty =
+				DependencyProperty.RegisterAttached(
+						"SelectAllTextOnFocus",
+						typeof(bool),
+						typeof(TextBoxBehavior),
+						new UIPropertyMetadata(false, OnSelectAllTextOnFocusChanged));
+
+		private static void OnSelectAllTextOnFocusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var textBox = d as TextBox;
+			if(textBox == null) return;
+
+			if(e.NewValue is bool == false) return;
+
+			if((bool)e.NewValue)
+			{
+				textBox.GotFocus += SelectAll;
+				textBox.PreviewMouseDown += IgnoreMouseButton;
+			}
+			else
+			{
+				textBox.GotFocus -= SelectAll;
+				textBox.PreviewMouseDown -= IgnoreMouseButton;
+			}
+		}
+
+		private static void SelectAll(object sender, RoutedEventArgs e)
+		{
+			var textBox = e.OriginalSource as TextBox;
+			if(textBox == null) return;
+			textBox.SelectAll();
+		}
+
+		private static void IgnoreMouseButton(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			var textBox = sender as TextBox;
+			if(textBox == null || (!textBox.IsReadOnly && textBox.IsKeyboardFocusWithin)) return;
+
+			e.Handled = true;
+			textBox.Focus();
+		}
+	}
+}

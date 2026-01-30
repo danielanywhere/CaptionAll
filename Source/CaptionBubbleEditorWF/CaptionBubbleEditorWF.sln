@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaptionBubbleEditorWF", "CaptionBubbleEditorWF\CaptionBubbleEditorWF.csproj", "{D74FC474-8106-41B2-850D-E35D07584AC8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScrollPanelWFCoreVirtual", "..\ScrollPanelWFCoreVirtual\ScrollPanelWFCoreVirtual\ScrollPanelWFCoreVirtual.csproj", "{BC901133-5EDD-4D21-B373-49A806C220F4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaveFormRendererLib", "..\NAudio.WaveFormRenderer\WaveFormRendererLib\WaveFormRendererLib.csproj", "{3EFEF2D1-5D08-46FD-AF6D-098DBE7FB3B4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D74FC474-8106-41B2-850D-E35D07584AC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D74FC474-8106-41B2-850D-E35D07584AC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D74FC474-8106-41B2-850D-E35D07584AC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D74FC474-8106-41B2-850D-E35D07584AC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC901133-5EDD-4D21-B373-49A806C220F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC901133-5EDD-4D21-B373-49A806C220F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC901133-5EDD-4D21-B373-49A806C220F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC901133-5EDD-4D21-B373-49A806C220F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EFEF2D1-5D08-46FD-AF6D-098DBE7FB3B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EFEF2D1-5D08-46FD-AF6D-098DBE7FB3B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EFEF2D1-5D08-46FD-AF6D-098DBE7FB3B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EFEF2D1-5D08-46FD-AF6D-098DBE7FB3B4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BD44FE35-F8C3-44AA-B3F6-2A1744FC0A8B}
+	EndGlobalSection
+EndGlobal
