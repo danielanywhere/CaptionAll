@@ -10,6 +10,7 @@ An intuitive, easy-to-use, fast-action, precise closed-caption editor desktop ap
 
 CaptionAll currently offers the following features.
 
+-   Head and tail of each caption move in unison unless they are explicitly separated.
 -   Several styles of available caption editing functions like Text, Width, Insert Space, Insert Caption, Toggle Caption | Space, Merge Captions, Delete Caption and Find and Replace in captions.
 -   Several selection styles such as Current Time, Selection Start Time, Selection End Time, Select None, Select Time From Caption, Snap Caption To Selection, and Center Cursor On Screen.
 -   Easy access to track transport like Space or F5 to Play/Pause, F4 or left arrow key to go back 5 seconds, and F6 or right arrow key to go forward five seconds.
