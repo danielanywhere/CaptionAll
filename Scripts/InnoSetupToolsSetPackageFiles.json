@@ -1,0 +1,5 @@
+{
+	"InputFoldername": "C:\\Files\\Dropbox\\Develop\\Shared\\CaptionAll\\Source\\CaptionAll\\bin\\Release\\net6.0-windows\\win-x64",
+	"OutputFilename": "C:\\Files\\Dropbox\\Develop\\Shared\\CaptionAll\\SetupProject\\CaptionAllSetup.iss",
+	"ActionType": "SetPackageFiles"
+}

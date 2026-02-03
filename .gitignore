@@ -202,6 +202,9 @@ publish/
 # in these scripts will be unencrypted
 PublishScripts/
 
+# Inno Setup
+*.e32
+
 # NuGet Packages
 *.nupkg
 # NuGet Symbol Packages
