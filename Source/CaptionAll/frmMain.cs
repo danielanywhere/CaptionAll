@@ -1360,6 +1360,7 @@ namespace CaptionAll
 		private CaptionItem InsertCaptionInSelectionArea(
 			CaptionEntryTypeEnum entryType, CaptionItem caption, UndoItem undo)
 		{
+			bool bCaptionFollows = false;
 			CaptionItem captionDupe = null;
 			CaptionItem captionNew = null;
 			CaptionItem captionNext = null;
@@ -1767,6 +1768,25 @@ namespace CaptionAll
 						Width = selectionEnd - selectionStart,
 						X = caption.X + caption.Width
 					};
+					bCaptionFollows = (captions.FirstOrDefault(x =>
+						x.X >= captionNew.X + captionNew.Width) != null);
+					if(captions.Count == 0 && captionNew.X > 0d)
+					{
+						captionPrev = new CaptionItem()
+						{
+							EntryType = CaptionEntryTypeEnum.Space,
+							Width = captionNew.X,
+							X = 0d
+						};
+						captions.Insert(0, captionPrev);
+						undo.Supports.Add(new UndoSupportItem()
+						{
+							Action = ActionTypeEnum.InsertCaption,
+							Caption = captionPrev,
+							Index = 0
+						});
+						index++;
+					}
 					captions.Insert(index, captionNew);
 					undo.Supports.Add(new UndoSupportItem()
 					{
@@ -1774,27 +1794,30 @@ namespace CaptionAll
 						Caption = captionNew,
 						Index = index
 					});
-					//	Duplicate caption.
-					index++;
-					captionDupe = new CaptionItem()
+					if(bCaptionFollows)
 					{
-						EntryType = caption.EntryType,
-						Text = caption.Text,
-						Width = right - selectionEnd,
-						X = selectionEnd
-					};
-					captions.Insert(index, captionDupe);
-					undo.Supports.Add(new UndoSupportItem()
-					{
-						Action = ActionTypeEnum.InsertCaption,
-						Caption = captionDupe,
-						Index = index
-					});
-					if(mRippleMode)
-					{
-						//	Move items right in ripple mode.
-						captionDupe.Width = right - selectionStart;
-						MoveCaptions(index + 1, selectionEnd - selectionStart, undo);
+						//	Duplicate caption.
+						index++;
+						captionDupe = new CaptionItem()
+						{
+							EntryType = caption.EntryType,
+							Text = caption.Text,
+							Width = right - selectionEnd,
+							X = selectionEnd
+						};
+						captions.Insert(index, captionDupe);
+						undo.Supports.Add(new UndoSupportItem()
+						{
+							Action = ActionTypeEnum.InsertCaption,
+							Caption = captionDupe,
+							Index = index
+						});
+						if(mRippleMode)
+						{
+							//	Move items right in ripple mode.
+							captionDupe.Width = right - selectionStart;
+							MoveCaptions(index + 1, selectionEnd - selectionStart, undo);
+						}
 					}
 					break;
 				case CaptionSelectionAreaEnum.CaptionSpaceCaption:
@@ -2149,6 +2172,7 @@ namespace CaptionAll
 		{
 			double adjustment = 0.5d;
 			CaptionItem captionNew = null;
+			CaptionItem captionNext = null;
 			CaptionItem captionPrev = null;
 			CaptionCollection captions = captionEditor.Captions;
 			int index = 0;
@@ -2294,13 +2318,73 @@ namespace CaptionAll
 								//	Break the existing item in half. Left side becomes new
 								//	caption or space.
 								index = captions.IndexOf(caption);
-								captions.Insert(index, captionNew);
-								undo.Supports.Add(new UndoSupportItem()
+								if(index == -1)
 								{
-									Action = ActionTypeEnum.InsertCaption,
-									Caption = captionNew,
-									Index = index
-								});
+									//	Caption was a placeholder only.
+									captionPrev = captions.LastOrDefault(x =>
+										x.X < captionNew.X);
+									if(captionPrev != null)
+									{
+										if(captionPrev.EntryType == CaptionEntryTypeEnum.Space)
+										{
+											//	Extend the existing space since the last item.
+											captionPrev.Width = captionNew.X - captionPrev.X;
+											undo.Supports.Add(new UndoSupportItem()
+											{
+												Action = ActionTypeEnum.EditCaptionWidth,
+												Caption = captionPrev,
+												Index = captions.IndexOf(captionPrev)
+											});
+										}
+										else
+										{
+											//	Insert a space prior to this item.
+											index = captions.IndexOf(captionPrev) + 1;
+											captionPrev = new CaptionItem()
+											{
+												EntryType = CaptionEntryTypeEnum.Space,
+												Width =
+													captionNew.X - (captionPrev.X + captionPrev.Width),
+												X = captionPrev.X + captionPrev.Width
+											};
+											captions.Insert(index, captionPrev);
+											undo.Supports.Add(new UndoSupportItem()
+											{
+												Action = ActionTypeEnum.InsertCaption,
+												Caption = captionPrev,
+												Index = index
+											});
+											index++;
+										}
+									}
+									captionNext = captions.FirstOrDefault(x =>
+										x.X > captionNew.X);
+									if(captionNext != null)
+									{
+										//	A next item exists.
+										index = captions.IndexOf(captionNext);
+										if(captionNew.X + captionNew.Width > captionNext.X)
+										{
+											captionNew.Width =
+												Math.Max(0.25d, (Math.Min(caption.Width,
+													captionNext.X - captionNew.X)));
+										}
+									}
+									else
+									{
+										index = captions.Count;
+									}
+								}
+								if(index > -1)
+								{
+									captions.Insert(index, captionNew);
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.InsertCaption,
+										Caption = captionNew,
+										Index = index
+									});
+								}
 								if(mRippleMode)
 								{
 									MoveCaptions(index + 1, captionNew.Width, undo);
@@ -2316,7 +2400,14 @@ namespace CaptionAll
 										Index = index + 1
 									});
 
-									caption.X = captionNew.X + captionNew.Width;
+									if(index == -1)
+									{
+										caption.X = captionNew.X;
+									}
+									else
+									{
+										caption.X = captionNew.X + captionNew.Width;
+									}
 									caption.Width = right - caption.X;
 								}
 								break;
@@ -3092,6 +3183,46 @@ namespace CaptionAll
 						Caption = caption,
 						Index = captionEditor.Captions.IndexOf(caption)
 					});
+					dialog.CaptionText = caption.Text;
+					if(dialog.ShowDialog() == DialogResult.OK)
+					{
+						caption.Text = dialog.CaptionText;
+						mUndoStack.Add(undo);
+						captionEditor.Invalidate();
+					}
+				}
+				else
+				{
+					//	There is no caption under the mouse or within the selection.
+					undo = new UndoItem()
+					{
+						Action = ActionTypeEnum.InsertCaption
+					};
+					if(captionEditor.SelectionEnd - captionEditor.SelectionStart > 0.25d)
+					{
+						caption = new CaptionItem()
+						{
+							EntryType = CaptionEntryTypeEnum.Normal,
+							Text = "New caption",
+							Width =
+								captionEditor.SelectionEnd - captionEditor.SelectionStart,
+							X = captionEditor.SelectionStart
+						};
+						InsertCaptionInSelectionArea(CaptionEntryTypeEnum.Normal,
+							caption, undo);
+					}
+					else
+					{
+						caption = new CaptionItem()
+						{
+							EntryType = CaptionEntryTypeEnum.Normal,
+							Text = "New caption",
+							Width = 1d,
+							X = captionEditor.SelectionStart
+						};
+						InsertCaptionOnSelectedItem(CaptionEntryTypeEnum.Normal,
+							caption, undo);
+					}
 					dialog.CaptionText = caption.Text;
 					if(dialog.ShowDialog() == DialogResult.OK)
 					{
