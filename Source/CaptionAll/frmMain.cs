@@ -1361,6 +1361,7 @@ namespace CaptionAll
 			CaptionEntryTypeEnum entryType, CaptionItem caption, UndoItem undo)
 		{
 			bool bCaptionFollows = false;
+			bool bCaptionReference = false;
 			CaptionItem captionDupe = null;
 			CaptionItem captionNew = null;
 			CaptionItem captionNext = null;
@@ -1379,6 +1380,7 @@ namespace CaptionAll
 			selectionStart = captionEditor.SelectionStart;
 			if(caption != null)
 			{
+				bCaptionReference = true;
 				captionPrev = captions.GetPrevious(caption);
 				captionNext = captions.GetNext(caption);
 				minimumX = caption.X;
@@ -1394,11 +1396,12 @@ namespace CaptionAll
 			else
 			{
 				index = 0;
-				captionPrev = captions.GetItemBeforeX(selectionStart);
+				captionPrev = captions.GetItemBeforeX(selectionStart, false);
 				captionNext = captions.GetItemAfterX(selectionEnd);
 				if(captionPrev != null)
 				{
-					minimumX = captionPrev.X + captionPrev.Width;
+					//minimumX = captionPrev.X + captionPrev.Width;
+					minimumX = captionPrev.X;
 				}
 				else
 				{
@@ -1413,6 +1416,7 @@ namespace CaptionAll
 				{
 					maximumX = captionEditor.Duration;
 				}
+				right = selectionEnd;
 
 				if(captionPrev == null)
 				{
@@ -1430,6 +1434,7 @@ namespace CaptionAll
 						Caption = captionPrev,
 						Index = 0
 					});
+					caption = captionPrev;
 				}
 
 				if(captionPrev != null)
@@ -1520,23 +1525,32 @@ namespace CaptionAll
 								Caption = caption,
 								Index = index
 							});
+							caption = new CaptionItem()
+							{
+								EntryType = CaptionEntryTypeEnum.Normal,
+								Width = selectionEnd - selectionStart,
+								X = selectionStart
+							};
+							bCaptionFollows = false;
 						}
 						else
 						{
 							//	No other caption to the right. Current right is selection.
-							caption = new CaptionItem()
-							{
-								EntryType = CaptionEntryTypeEnum.Space,
-								Width = selectionEnd - right,
-								X = right
-							};
-							captions.Add(caption);
-							undo.Supports.Add(new UndoSupportItem()
-							{
-								Action = ActionTypeEnum.InsertCaption,
-								Caption = caption,
-								Index = index
-							});
+							//	DEP:20260203.1634. Commented to use caption as space.
+							caption = captionPrev;
+							//caption = new CaptionItem()
+							//{
+							//	EntryType = CaptionEntryTypeEnum.Space,
+							//	Width = selectionEnd - selectionStart,
+							//	X = selectionStart
+							//};
+							//captions.Add(caption);
+							//undo.Supports.Add(new UndoSupportItem()
+							//{
+							//	Action = ActionTypeEnum.InsertCaption,
+							//	Caption = caption,
+							//	Index = index
+							//});
 						}
 					}
 				}
@@ -1752,13 +1766,24 @@ namespace CaptionAll
 					//	Original caption.
 					index = captions.IndexOf(caption);
 					right = caption.X + caption.Width;
-					undo.Supports.Add(new UndoSupportItem()
+					if(index == -1)
 					{
-						Action = ActionTypeEnum.EditCaptionWidth,
-						Caption = caption,
-						Index = index
-					});
-					caption.Width = selectionStart - caption.X;
+						//	This caption is only a template.
+						//	Get the item to the left of the new area.
+						caption = captions.LastOrDefault(x => x.X < caption.X);
+					}
+					if(caption != null)
+					{
+						//	Adjust the width of the caption to the left.
+						undo.Supports.Add(new UndoSupportItem()
+						{
+							Action = ActionTypeEnum.EditCaptionWidth,
+							Caption = caption,
+							Index = index
+						});
+						caption.Width = selectionStart - caption.X;
+						index = captions.IndexOf(caption);
+					}
 					//	New caption.
 					index++;
 					captionNew = new CaptionItem()
@@ -1766,11 +1791,11 @@ namespace CaptionAll
 						EntryType = entryType,
 						Text = caption.Text,
 						Width = selectionEnd - selectionStart,
-						X = caption.X + caption.Width
+						X = selectionStart
 					};
-					bCaptionFollows = (captions.FirstOrDefault(x =>
-						x.X >= captionNew.X + captionNew.Width) != null);
-					if(captions.Count == 0 && captionNew.X > 0d)
+					bCaptionFollows = (captions.Count > index &&
+						captions[index].EntryType == CaptionEntryTypeEnum.Normal);
+					if(bCaptionReference && captions.Count == 0 && captionNew.X > 0d)
 					{
 						captionPrev = new CaptionItem()
 						{
@@ -3200,16 +3225,8 @@ namespace CaptionAll
 					};
 					if(captionEditor.SelectionEnd - captionEditor.SelectionStart > 0.25d)
 					{
-						caption = new CaptionItem()
-						{
-							EntryType = CaptionEntryTypeEnum.Normal,
-							Text = "New caption",
-							Width =
-								captionEditor.SelectionEnd - captionEditor.SelectionStart,
-							X = captionEditor.SelectionStart
-						};
-						InsertCaptionInSelectionArea(CaptionEntryTypeEnum.Normal,
-							caption, undo);
+						caption = InsertCaptionInSelectionArea(CaptionEntryTypeEnum.Normal,
+							null, undo);
 					}
 					else
 					{

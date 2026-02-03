@@ -422,14 +422,17 @@ namespace CaptionBubbleEditorWF
 		/// <param name="x">
 		/// X coordinate to test for.
 		/// </param>
+		/// <param name="includeWidth">
+		/// Value indicating whether to include the width.
+		/// </param>
 		/// <returns>
 		/// Reference to the last item before the specified coordinate, if found.
 		/// Otherwise, null.
 		/// </returns>
-		public CaptionItem GetItemBeforeX(double x)
+		public CaptionItem GetItemBeforeX(double x, bool includeWidth = true)
 		{
 			CaptionItem caption = this.LastOrDefault(item =>
-				item.X + item.Width <= x);
+				item.X + (includeWidth ? item.Width : 0d) <= x);
 
 			return caption;
 		}
