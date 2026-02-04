@@ -530,13 +530,16 @@ namespace CaptionAll
 		/// </summary>
 		private void ClearCaptions()
 		{
+			mCaptionFilename = "";
 			captionEditor.Captions.Clear();
 			captionEditor.Captions.Add(new CaptionItem()
 			{
 				EntryType = CaptionEntryTypeEnum.Space,
-				Width = captionEditor.Duration,
+				Width = Duration,
 				X = 0d
 			});
+			mUndoStack.Clear();
+			this.Refresh();
 		}
 		//*-----------------------------------------------------------------------*
 
@@ -548,7 +551,13 @@ namespace CaptionAll
 		/// </summary>
 		private void ClearMedia()
 		{
+			mMediaFilename = "";
+			mMediaPlayer.Caption = "";
+			mStatusBusy = false;
 
+			captionEditor.ClearMedia();
+			Duration = 10d;
+			this.Refresh();
 		}
 		//*-----------------------------------------------------------------------*
 
@@ -560,7 +569,10 @@ namespace CaptionAll
 		/// </summary>
 		private void ClearProject()
 		{
-
+			mProjectInfo = new CaptionProjectItem();
+			mProjectFilename = "";
+			CommonlyUsedWords.Clear();
+			this.Refresh();
 		}
 		//*-----------------------------------------------------------------------*
 
@@ -572,7 +584,7 @@ namespace CaptionAll
 		/// </summary>
 		private void ClearUndo()
 		{
-
+			mUndoStack.Clear();
 		}
 		//*-----------------------------------------------------------------------*
 
@@ -7857,17 +7869,21 @@ namespace CaptionAll
 		}
 		//*-----------------------------------------------------------------------*
 
+		//	TODO: Test to see whether it is okay for frmMain duration to reflect CaptionEditor.
 		//*-----------------------------------------------------------------------*
 		//*	Duration																															*
 		//*-----------------------------------------------------------------------*
-		private double mDuration = 0f;
+		///// <summary>
+		///// Private member for <see cref="Duration">Duration</see>.
+		///// </summary>
+		//private double mDuration = 0f;
 		/// <summary>
 		/// Get/Set the duration of the media, in decimal seconds.
 		/// </summary>
 		public double Duration
 		{
-			get { return mDuration; }
-			set { mDuration = value; }
+			get { return captionEditor.Duration; }
+			set { captionEditor.Duration = value; }
 		}
 		//*-----------------------------------------------------------------------*
 

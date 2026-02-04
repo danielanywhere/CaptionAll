@@ -568,11 +568,27 @@ namespace CaptionBubbleEditorWF
 		//*-----------------------------------------------------------------------*
 
 		//*-----------------------------------------------------------------------*
+		//* Clear																																	*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Clear the caption bubble control's media display.
+		/// </summary>
+		public void ClearMedia()
+		{
+			mMediaFilename = "";
+			mWaveformBitmap = null;
+			mRenderer = new WaveFormRenderer();
+			this.Invalidate();
+		}
+		//*-----------------------------------------------------------------------*
+
+		//*-----------------------------------------------------------------------*
 		//*	DrawingLocation																												*
 		//*-----------------------------------------------------------------------*
 		private PointEv mDrawingLocation = new PointEv();
 		/// <summary>
-		/// Get a reference to the drawing location coordinate for this paintable object.
+		/// Get a reference to the drawing location coordinate for this paintable
+		/// object.
 		/// </summary>
 		public PointEv DrawingLocation
 		{
@@ -693,7 +709,56 @@ namespace CaptionBubbleEditorWF
 			get { return mDuration; }
 			set
 			{
-				mDuration = value;
+				CaptionItem captionLast = (mCaptions.Count > 0 ? mCaptions[^1] : null);
+				CaptionItem captionNew = null;
+				double duration = value;
+				double minDuration =
+					(captionLast != null ? captionLast.X + 0.25d : 0.25d);
+				double right = 0d;
+
+				duration = Math.Max(duration, minDuration);
+				if(captionLast != null)
+				{
+					//	Caption was present.
+					right = captionLast.X + captionLast.Width;
+					if(right > duration)
+					{
+						//	Last caption will be shrunken.
+						captionLast.Width = duration - captionLast.X;
+					}
+					else if(right < duration)
+					{
+						//	Last caption will be extended if it is a space or appended
+						//	to with a space if it is text.
+						if(captionLast.EntryType == CaptionEntryTypeEnum.Normal)
+						{
+							//	Text.
+							captionNew = new CaptionItem()
+							{
+								EntryType = CaptionEntryTypeEnum.Space,
+								Width = duration - right,
+								X = right
+							};
+							mCaptions.Add(captionNew);
+						}
+						else
+						{
+							//	Space.
+							captionLast.Width = duration - captionLast.X;
+						}
+					}
+				}
+				else
+				{
+					//	Add a default space.
+					mCaptions.Add(new CaptionItem()
+					{
+						EntryType = CaptionEntryTypeEnum.Space,
+						Width = duration,
+						X = 0d
+					});
+				}
+				mDuration = duration;
 				//this.Width = (int)(mDuration * mPixelsPerSecond);
 				this.mDrawingSize.Width = (int)(mDuration * mPixelsPerSecond);
 				this.OnResize(new EventArgs());
