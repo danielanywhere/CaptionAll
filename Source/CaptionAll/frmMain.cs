@@ -523,6 +523,60 @@ namespace CaptionAll
 		//*-----------------------------------------------------------------------*
 
 		//*-----------------------------------------------------------------------*
+		//* ClearCaptions																													*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Clear the captions.
+		/// </summary>
+		private void ClearCaptions()
+		{
+			captionEditor.Captions.Clear();
+			captionEditor.Captions.Add(new CaptionItem()
+			{
+				EntryType = CaptionEntryTypeEnum.Space,
+				Width = captionEditor.Duration,
+				X = 0d
+			});
+		}
+		//*-----------------------------------------------------------------------*
+
+		//*-----------------------------------------------------------------------*
+		//* ClearMedia																														*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Clear the media.
+		/// </summary>
+		private void ClearMedia()
+		{
+
+		}
+		//*-----------------------------------------------------------------------*
+
+		//*-----------------------------------------------------------------------*
+		//* ClearProject																													*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Clear the project.
+		/// </summary>
+		private void ClearProject()
+		{
+
+		}
+		//*-----------------------------------------------------------------------*
+
+		//*-----------------------------------------------------------------------*
+		//* ClearUndo																															*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Clear the Undo buffer.
+		/// </summary>
+		private void ClearUndo()
+		{
+
+		}
+		//*-----------------------------------------------------------------------*
+
+		//*-----------------------------------------------------------------------*
 		//* ctxCaptionProperties_Click																						*
 		//*-----------------------------------------------------------------------*
 		/// <summary>
@@ -1362,6 +1416,7 @@ namespace CaptionAll
 		{
 			bool bCaptionFollows = false;
 			bool bCaptionReference = false;
+			bool bTemplate = false;
 			CaptionItem captionDupe = null;
 			CaptionItem captionNew = null;
 			CaptionItem captionNext = null;
@@ -1766,7 +1821,8 @@ namespace CaptionAll
 					//	Original caption.
 					index = captions.IndexOf(caption);
 					right = caption.X + caption.Width;
-					if(index == -1)
+					bTemplate = (index == -1);
+					if(bTemplate)
 					{
 						//	This caption is only a template.
 						//	Get the item to the left of the new area.
@@ -1793,24 +1849,29 @@ namespace CaptionAll
 						Width = selectionEnd - selectionStart,
 						X = selectionStart
 					};
-					bCaptionFollows = (captions.Count > index &&
-						captions[index].EntryType == CaptionEntryTypeEnum.Normal);
-					if(bCaptionReference && captions.Count == 0 && captionNew.X > 0d)
+					bCaptionFollows = ((!bTemplate &&
+						selectionStart > caption.X && selectionEnd < right) ||
+						(captions.Count > index &&
+						captions[index].EntryType == CaptionEntryTypeEnum.Normal));
+					if(bCaptionReference)
 					{
-						captionPrev = new CaptionItem()
+						if(captions.Count == 0 && captionNew.X > 0d)
 						{
-							EntryType = CaptionEntryTypeEnum.Space,
-							Width = captionNew.X,
-							X = 0d
-						};
-						captions.Insert(0, captionPrev);
-						undo.Supports.Add(new UndoSupportItem()
-						{
-							Action = ActionTypeEnum.InsertCaption,
-							Caption = captionPrev,
-							Index = 0
-						});
-						index++;
+							captionPrev = new CaptionItem()
+							{
+								EntryType = CaptionEntryTypeEnum.Space,
+								Width = captionNew.X,
+								X = 0d
+							};
+							captions.Insert(index, captionPrev);
+							undo.Supports.Add(new UndoSupportItem()
+							{
+								Action = ActionTypeEnum.InsertCaption,
+								Caption = captionPrev,
+								Index = 0
+							});
+							index++;
+						}
 					}
 					captions.Insert(index, captionNew);
 					undo.Supports.Add(new UndoSupportItem()
@@ -4998,6 +5059,27 @@ namespace CaptionAll
 		//*-----------------------------------------------------------------------*
 
 		//*-----------------------------------------------------------------------*
+		//* mnuFileNew_Click																											*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Clear the media, the project, and the captions.
+		/// </summary>
+		/// <param name="sender">
+		/// The object raising this event.
+		/// </param>
+		/// <param name="e">
+		/// Standard event arguments.
+		/// </param>
+		private void mnuFileNew_Click(object sender, EventArgs e)
+		{
+			ClearMedia();
+			ClearCaptions();
+			ClearProject();
+			ClearUndo();
+		}
+		//*-----------------------------------------------------------------------*
+
+		//*-----------------------------------------------------------------------*
 		//* mnuFileOpenCaptions_Click																							*
 		//*-----------------------------------------------------------------------*
 		/// <summary>
@@ -7398,6 +7480,8 @@ namespace CaptionAll
 
 			captionEditor.UpdateWidth();
 
+			ClearCaptions();
+
 			mMediaPlayer.Caption = "No file open...";
 		}
 		//*-----------------------------------------------------------------------*
@@ -7698,6 +7782,7 @@ namespace CaptionAll
 			mnuFileExit.Click += mnuFileExit_Click;
 			mnuFileExportTranscriptText.Click += mnuFileExportTranscriptText_Click;
 			mnuFileLoadProject.Click += mnuFileLoadProject_Click;
+			mnuFileNew.Click += mnuFileNew_Click;
 			mnuFileOpenCaptions.Click += mnuFileOpenCaptions_Click;
 			mnuFileOpenMedia.Click += mnuFileOpenMedia_Click;
 			mnuFileSaveCaptions.Click += mnuFileSaveCaptions_Click;

@@ -1095,6 +1095,28 @@ namespace CaptionBubbleEditorWF
 		////*-----------------------------------------------------------------------*
 
 		//*-----------------------------------------------------------------------*
+		//* ToString																															*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Return the string representation of this item.
+		/// </summary>
+		/// <returns>
+		/// The string representation of this item.
+		/// </returns>
+		public override string ToString()
+		{
+			StringBuilder builder = new StringBuilder();
+
+			builder.Append(this.mEntryType.ToString());
+			if(this.mEntryType == CaptionEntryTypeEnum.Normal)
+			{
+				builder.Append($"; {this.mText}");
+			}
+			return builder.ToString();
+		}
+		//*-----------------------------------------------------------------------*
+
+		//*-----------------------------------------------------------------------*
 		//*	Width																																	*
 		//*-----------------------------------------------------------------------*
 		private double mWidth = 0d;

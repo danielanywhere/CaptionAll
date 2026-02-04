@@ -157,6 +157,7 @@ namespace CaptionAll
 			ctxSelectNone = new ToolStripMenuItem();
 			ctxSelectTimeFromCaption = new ToolStripMenuItem();
 			ctxSnapCaptionToSelection = new ToolStripMenuItem();
+			mnuFileNew = new ToolStripMenuItem();
 			titleBar.MenuArea.SuspendLayout();
 			menuStrip.SuspendLayout();
 			statusStrip.SuspendLayout();
@@ -202,7 +203,7 @@ namespace CaptionAll
 			// 
 			// mnuFile
 			// 
-			mnuFile.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadProject, mnuFileSaveProject, mnuFileSaveProjectAs, mnuFileSep1, mnuFileOpenCaptions, mnuFileSaveCaptions, mnuFileSaveCaptionsAs, mnuFileOpenMedia, mnuFileSep2, mnuExport, mnuFileSep3, mnuFileExit });
+			mnuFile.DropDownItems.AddRange(new ToolStripItem[] { mnuFileNew, mnuFileLoadProject, mnuFileSaveProject, mnuFileSaveProjectAs, mnuFileSep1, mnuFileOpenCaptions, mnuFileSaveCaptions, mnuFileSaveCaptionsAs, mnuFileOpenMedia, mnuFileSep2, mnuExport, mnuFileSep3, mnuFileExit });
 			mnuFile.Name = "mnuFile";
 			mnuFile.Size = new System.Drawing.Size(46, 34);
 			mnuFile.Text = "&File";
@@ -957,6 +958,13 @@ namespace CaptionAll
 			ctxSnapCaptionToSelection.Size = new System.Drawing.Size(339, 24);
 			ctxSnapCaptionToSelection.Text = "Snap Caption To S&election";
 			// 
+			// mnuFileNew
+			// 
+			mnuFileNew.Name = "mnuFileNew";
+			mnuFileNew.ShortcutKeys = Keys.Control | Keys.N;
+			mnuFileNew.Size = new System.Drawing.Size(305, 26);
+			mnuFileNew.Text = "&New";
+			// 
 			// frmMain
 			// 
 			AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -1095,5 +1103,6 @@ namespace CaptionAll
 		private ToolStripMenuItem mnuHelpAbout;
 		private ToolStripMenuItem mnuToolsAlignScriptToCaptions;
 		private ToolStripMenuItem mnuEditExtendCaptionTails;
+		private ToolStripMenuItem mnuFileNew;
 	}
 }
