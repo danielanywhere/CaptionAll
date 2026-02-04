@@ -320,6 +320,7 @@ namespace MediaPlayerWPFUC
 			txtSelectionStart.GotFocus += txtSelectionStart_GotFocus;
 			txtSelectionStart.LostFocus += txtSelectionStart_LostFocus;
 			txtSelectionStart.TextChanged += txtSelectionStart_TextChanged;
+			mediaPlayer.ScrubbingEnabled = true;
 		}
 		//*-----------------------------------------------------------------------*
 
