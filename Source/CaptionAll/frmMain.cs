@@ -3234,11 +3234,19 @@ namespace CaptionAll
 		private void mnuEditCaptionText_Click(object sender, EventArgs e)
 		{
 			CaptionItem caption = null;
-			frmText dialog = new frmText();
+			CaptionItem captionEdit = null;
+			frmCaptionProperties dialog = new frmCaptionProperties();
 			UndoItem undo = null;
+			double width = 0d;
+			double x = 0d;
 
 			mCaptionBusy = true;
 			dialog.Owner = this;
+			dialog.MinimumX = 0;
+			dialog.MaximumX = Duration;
+			dialog.StartTimeEnabled = false;
+			dialog.DurationEnabled = false;
+			dialog.BlankSpaceCheckBoxEnabled = false;
 			if(captionEditor.Captions.SelectedItems.Count > 0)
 			{
 				undo = new UndoItem();
@@ -3252,14 +3260,25 @@ namespace CaptionAll
 						Index = captionEditor.Captions.IndexOf(captionItem)
 					});
 				}
-				dialog.CaptionText = string.Join("\r\n",
-					captionEditor.Captions.SelectedItems.Select(x => x.Text).ToArray());
+				x = captionEditor.Captions.SelectedItems[0].X;
+				caption = captionEditor.Captions.SelectedItems[^1];
+				width = (caption.X + caption.Width) - x;
+				captionEdit = new CaptionItem()
+				{
+					EntryType = CaptionEntryTypeEnum.Normal,
+					Text = string.Join("\r\n",
+						captionEditor.Captions.SelectedItems
+							.Select(x => x.Text).ToArray()),
+					Width = width,
+					X = x
+				};
+				dialog.Caption = captionEdit;
 				if(dialog.ShowDialog() == DialogResult.OK)
 				{
 					foreach(CaptionItem captionItem in
 						captionEditor.Captions.SelectedItems)
 					{
-						captionItem.Text = dialog.CaptionText;
+						captionItem.Text = dialog.Caption.Text;
 					}
 					mUndoStack.Add(undo);
 					captionEditor.Invalidate();
@@ -3281,10 +3300,17 @@ namespace CaptionAll
 						Caption = caption,
 						Index = captionEditor.Captions.IndexOf(caption)
 					});
-					dialog.CaptionText = caption.Text;
+					captionEdit = new CaptionItem()
+					{
+						EntryType = caption.EntryType,
+						Text = caption.Text,
+						Width = caption.Width,
+						X = caption.X
+					};
+					dialog.Caption = captionEdit;
 					if(dialog.ShowDialog() == DialogResult.OK)
 					{
-						caption.Text = dialog.CaptionText;
+						caption.Text = dialog.Caption.Text;
 						mUndoStack.Add(undo);
 						captionEditor.Invalidate();
 					}
@@ -3292,6 +3318,7 @@ namespace CaptionAll
 				else
 				{
 					//	There is no caption under the mouse or within the selection.
+
 					undo = new UndoItem()
 					{
 						Action = ActionTypeEnum.InsertCaption
@@ -3310,13 +3337,20 @@ namespace CaptionAll
 							Width = 1d,
 							X = captionEditor.SelectionStart
 						};
-						InsertCaptionOnSelectedItem(CaptionEntryTypeEnum.Normal,
+						caption = InsertCaptionOnSelectedItem(CaptionEntryTypeEnum.Normal,
 							caption, undo);
 					}
-					dialog.CaptionText = caption.Text;
+					captionEdit = new CaptionItem()
+					{
+						EntryType = CaptionEntryTypeEnum.Normal,
+						Text = caption.Text,
+						Width = caption.Width,
+						X = caption.X
+					};
+					dialog.Caption = captionEdit;
 					if(dialog.ShowDialog() == DialogResult.OK)
 					{
-						caption.Text = dialog.CaptionText;
+						caption.Text = dialog.Caption.Text;
 						mUndoStack.Add(undo);
 						captionEditor.Invalidate();
 					}

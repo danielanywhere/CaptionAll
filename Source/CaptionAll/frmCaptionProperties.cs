@@ -331,6 +331,28 @@ namespace CaptionAll
 		//*-----------------------------------------------------------------------*
 
 		//*-----------------------------------------------------------------------*
+		//*	BlankSpaceCheckBoxEnabled																							*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for
+		/// <see cref="BlankSpaceCheckBoxEnabled">BlankSpaceCheckBoxEnabled</see>.
+		/// </summary>
+		private bool mBlankSpaceCheckBoxEnabled = true;
+		/// <summary>
+		/// Get/Set a value indicating whether the blank space checkbox is enabled.
+		/// </summary>
+		public bool BlankSpaceCheckBoxEnabled
+		{
+			get { return mBlankSpaceCheckBoxEnabled; }
+			set
+			{
+				mBlankSpaceCheckBoxEnabled = value;
+				chkBlankSpace.Enabled = value;
+			}
+		}
+		//*-----------------------------------------------------------------------*
+
+		//*-----------------------------------------------------------------------*
 		//*	Caption																																*
 		//*-----------------------------------------------------------------------*
 		private CaptionItem mCaption = null;
@@ -354,6 +376,28 @@ namespace CaptionAll
 					LimitX();
 					CalcEnd();
 				}
+			}
+		}
+		//*-----------------------------------------------------------------------*
+
+		//*-----------------------------------------------------------------------*
+		//*	DurationEnabled																												*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="DurationEnabled">DurationEnabled</see>.
+		/// </summary>
+		private bool mDurationEnabled = true;
+		/// <summary>
+		/// Get/Set a value indicating whether the duration textbox is enabled.
+		/// </summary>
+		public bool DurationEnabled
+		{
+			get { return mDurationEnabled; }
+			set
+			{
+				mDurationEnabled = value;
+				txtDuration.ReadOnly = (!value);
+				txtDuration.TabStop = value;
 			}
 		}
 		//*-----------------------------------------------------------------------*
@@ -390,6 +434,28 @@ namespace CaptionAll
 			{
 				mMinimumX = value;
 				LimitX();
+			}
+		}
+		//*-----------------------------------------------------------------------*
+
+		//*-----------------------------------------------------------------------*
+		//*	StartTimeEnabled																											*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="StartTimeEnabled">StartTimeEnabled</see>.
+		/// </summary>
+		private bool mStartTimeEnabled = true;
+		/// <summary>
+		/// Get/Set a value indicating whether the start time textbox is enabled.
+		/// </summary>
+		public bool StartTimeEnabled
+		{
+			get { return mStartTimeEnabled; }
+			set
+			{
+				mStartTimeEnabled = value;
+				txtTime.ReadOnly = (!value);
+				txtTime.TabStop = value;
 			}
 		}
 		//*-----------------------------------------------------------------------*
