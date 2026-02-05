@@ -345,6 +345,7 @@ namespace MediaPlayerWPFUC
 		/// </summary>
 		public void Clear()
 		{
+			Caption = "";
 			mediaPlayer.Stop();
 			mediaPlayer.Source = null;
 			mIsPlaying = false;
