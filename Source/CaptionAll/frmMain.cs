@@ -552,7 +552,7 @@ namespace CaptionAll
 		private void ClearMedia()
 		{
 			mMediaFilename = "";
-			mMediaPlayer.Caption = "";
+			mMediaPlayer.Clear();
 			mStatusBusy = false;
 
 			captionEditor.ClearMedia();
@@ -813,6 +813,264 @@ namespace CaptionAll
 		{
 			//	Context menu follows.
 			mnuEditToggleCaptionSpace_Click(sender, e);
+		}
+		//*-----------------------------------------------------------------------*
+
+		//*-----------------------------------------------------------------------*
+		//* DeleteCaption																													*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Delete the specified caption from the collection, healing the toe and
+		/// heel relations of the adjacent items.
+		/// </summary>
+		/// <param name="caption">
+		/// Reference to the caption to remove from the stream.
+		/// </param>
+		/// <param name="undo">
+		/// Reference to an open undo to which service entries will be added.
+		/// </param>
+		private void DeleteCaption(CaptionItem caption, UndoItem undo)
+		{
+			int captionCount = 0;
+			int captionIndex = 0;
+			CaptionItem captionLeft = null;
+			int captionLeftIndex = 0;
+			CaptionItem captionRight = null;
+			int captionRightIndex = 0;
+			CaptionCollection captions = null;
+
+			if(caption != null)
+			{
+				captions = captionEditor.Captions;
+				if(captions.Contains(caption))
+				{
+					captionCount = captions.Count;
+					if(mRippleMode)
+					{
+						//	TODO: Handle ripple delete by moving right items to the left
+						//	and adding space at the end to fill duration.
+						undo.Supports.Add(new UndoSupportItem()
+						{
+							Action = ActionTypeEnum.DeleteCaption,
+							Caption = caption,
+							Index = captions.IndexOf(caption)
+						});
+						captions.Remove(caption);
+					}
+					else
+					{
+						captionLeftIndex = -1;
+						captionRightIndex = -1;
+						captionLeft = null;
+						captionRight = null;
+						captionIndex = captions.IndexOf(caption);
+						if(captionIndex > 0)
+						{
+							captionLeftIndex = captionIndex - 1;
+							captionLeft = captions[captionLeftIndex];
+						}
+						if(captionIndex + 1 < captionCount)
+						{
+							captionRightIndex = captionIndex + 1;
+							captionRight = captions[captionRightIndex];
+						}
+						if(captionLeft != null)
+						{
+							//	The item has a left sibling.
+							if(captionRight != null)
+							{
+								//	The item has both left and right siblings.
+								if(captionLeft.EntryType == CaptionEntryTypeEnum.Normal &&
+									captionRight.EntryType == CaptionEntryTypeEnum.Normal)
+								{
+									//	This item has texts on each side.
+									//	Convert it directly to a space.
+									caption.EntryType = CaptionEntryTypeEnum.Space;
+									caption.Text = "";
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.EditCaptionType,
+										Caption = caption,
+										Index = captionIndex
+									});
+								}
+								else if(captionLeft.EntryType == CaptionEntryTypeEnum.Normal)
+								{
+									//	This item has a text on the left and a space on the right.
+									//	The space to the right is placed at the position of this
+									//	caption and its width is extended by the width of this
+									//	caption.
+									//	This caption is deleted.
+									captionRight.X = caption.X;
+									captionRight.Width += caption.Width;
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.EditCaptionX |
+											ActionTypeEnum.EditCaptionWidth,
+										Caption = captionRight,
+										Index = captionRightIndex
+									});
+									captions.Remove(caption);
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.DeleteCaption,
+										Caption = caption,
+										Index = captionIndex
+									});
+								}
+								else if(captionRight.EntryType ==
+									CaptionEntryTypeEnum.Normal)
+								{
+									//	This item has a space on the left and a text on the right.
+									//	The space to the left is extended by the width of this
+									//	caption.
+									//	This caption is deleted.
+									captionLeft.Width += caption.Width;
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.EditCaptionWidth,
+										Caption = captionLeft,
+										Index = captionLeftIndex
+									});
+									captions.Remove(caption);
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.DeleteCaption,
+										Caption = caption,
+										Index = captionIndex
+									});
+								}
+								else
+								{
+									//	This item has spaces on both sides.
+									//	The widths of this caption and the space to the right are
+									//	added to the space on the left.
+									//	This caption and the space to the right are deleted.
+									captionLeft.Width += caption.Width + captionRight.Width;
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.EditCaptionWidth,
+										Caption = captionLeft,
+										Index = captionLeftIndex
+									});
+									captions.Remove(caption);
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.DeleteCaption,
+										Caption = caption,
+										Index = captionIndex
+									});
+									captions.Remove(captionRight);
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.DeleteCaption,
+										Caption = captionRight,
+										Index = captionRightIndex
+									});
+								}
+							}
+							else
+							{
+								//	The item has only a left sibling.
+								if(captionLeft.EntryType == CaptionEntryTypeEnum.Normal)
+								{
+									//	This item has text on the left only.
+									//	This caption is converted directly to a space.
+									caption.EntryType = CaptionEntryTypeEnum.Space;
+									caption.Text = "";
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.EditCaptionType |
+											ActionTypeEnum.EditCaptionText,
+										Caption = caption,
+										Index = captionIndex
+									});
+								}
+								else
+								{
+									//	This item has a space on the left only.
+									//	The space to the left is extended by the width of this
+									//	caption.
+									//	This caption is deleted.
+									captionLeft.Width += caption.Width;
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.EditCaptionWidth,
+										Caption = captionLeft,
+										Index = captionLeftIndex
+									});
+									captions.Remove(caption);
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.DeleteCaption,
+										Caption = caption,
+										Index = captionIndex
+									});
+								}
+							}
+						}
+						else
+						{
+							//	The item doesn't have a left sibling.
+							if(captionRight != null)
+							{
+								//	The item has only a right sibling.
+								if(captionRight.EntryType == CaptionEntryTypeEnum.Normal)
+								{
+									//	This item has text on the right only.
+									//	This caption is converted directly to a space.
+									caption.EntryType = CaptionEntryTypeEnum.Space;
+									caption.Text = "";
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.EditCaptionType |
+											ActionTypeEnum.EditCaptionText,
+										Caption = caption,
+										Index = captionIndex
+									});
+								}
+								else
+								{
+									//	This item has space on the right only.
+									//	The space to the right is given this caption's position
+									//	and extended by the width of this caption.
+									//	This caption is deleted.
+									captionRight.X = caption.X;
+									captionRight.Width += caption.Width;
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.EditCaptionX |
+											ActionTypeEnum.EditCaptionWidth,
+										Caption = captionRight,
+										Index = captionRightIndex
+									});
+									captions.Remove(caption);
+									undo.Supports.Add(new UndoSupportItem()
+									{
+										Action = ActionTypeEnum.DeleteCaption,
+										Caption = caption,
+										Index = captionIndex
+									});
+								}
+							}
+							else
+							{
+								//	The item doesn't have any siblings.
+								//	This caption is converted directly to a space.
+								caption.EntryType = CaptionEntryTypeEnum.Space;
+								caption.Text = "";
+								undo.Supports.Add(new UndoSupportItem()
+								{
+									Action = ActionTypeEnum.EditCaptionType |
+										ActionTypeEnum.EditCaptionText,
+									Caption = caption,
+									Index = captionIndex
+								});
+							}
+						}
+					}
+				}
+			}
 		}
 		//*-----------------------------------------------------------------------*
 
@@ -3666,10 +3924,10 @@ namespace CaptionAll
 		private void mnuEditDeleteCaption_Click(object sender, EventArgs e)
 		{
 			CaptionItem caption = null;
+			int captionCount = 0;
 			int count = 0;
-			int index = 0;
+			List<CaptionItem> items = null;
 			UndoItem undo = null;
-			double x = 0d;
 
 			mCaptionBusy = true;
 			if(captionEditor.Captions.SelectedItems.Count > 0)
@@ -3678,32 +3936,12 @@ namespace CaptionAll
 				{
 					Action = ActionTypeEnum.DeleteCaption
 				};
-				foreach(CaptionItem captionItem in
-					captionEditor.Captions.SelectedItems)
+				captionCount = captionEditor.Captions.Count;
+				items = new List<CaptionItem>(captionEditor.Captions.SelectedItems);
+				count = items.Count;
+				foreach(CaptionItem captionItem in items)
 				{
-					if(captionEditor.Captions.Contains(captionItem))
-					{
-						if(mRippleMode)
-						{
-							undo.Supports.Add(new UndoSupportItem()
-							{
-								Action = ActionTypeEnum.DeleteCaption,
-								Caption = captionItem,
-								Index = captionEditor.Captions.IndexOf(captionItem)
-							});
-							captionEditor.Captions.Remove(captionItem);
-						}
-						else
-						{
-							undo.Supports.Add(new UndoSupportItem()
-							{
-								Action = ActionTypeEnum.EditCaptionType,
-								Caption = captionItem,
-								Index = captionEditor.Captions.IndexOf(captionItem)
-							});
-							captionItem.EntryType = CaptionEntryTypeEnum.Space;
-						}
-					}
+					DeleteCaption(captionItem, undo);
 				}
 				captionEditor.Captions.SelectedItems.Clear();
 				if(mRippleMode)
@@ -3723,40 +3961,10 @@ namespace CaptionAll
 					{
 						Action = ActionTypeEnum.DeleteCaption
 					};
-					x = caption.X;
-					index = captionEditor.Captions.IndexOf(caption);
+					DeleteCaption(caption, undo);
 					if(mRippleMode)
 					{
-						undo.Supports.Add(new UndoSupportItem()
-						{
-							Action = ActionTypeEnum.DeleteCaption,
-							Caption = caption,
-							Index = captionEditor.Captions.IndexOf(caption)
-						});
-						captionEditor.Captions.Remove(caption);
-						count = captionEditor.Captions.Count;
-						for(; index < count; index++)
-						{
-							caption = captionEditor.Captions[index];
-							undo.Supports.Add(new UndoSupportItem()
-							{
-								Action = ActionTypeEnum.EditCaptionProperties,
-								Caption = caption,
-								Index = index
-							});
-							caption.X = x;
-							x += caption.Width;
-						}
-					}
-					else
-					{
-						undo.Supports.Add(new UndoSupportItem()
-						{
-							Action = ActionTypeEnum.EditCaptionType,
-							Caption = caption,
-							Index = captionEditor.Captions.IndexOf(caption)
-						});
-						caption.EntryType = CaptionEntryTypeEnum.Space;
+						captionEditor.Captions.RecalculateChain();
 					}
 					mUndoStack.Add(undo);
 					captionEditor.Invalidate();
@@ -5225,7 +5433,10 @@ namespace CaptionAll
 		private void mnuFileSaveCaptions_EnabledChanged(object sender,
 			EventArgs e)
 		{
-			//mnuFileSaveCaptionsAs.Enabled = mnuFileSaveCaptions.Enabled;
+			if(mnuFileSaveCaptions.Enabled)
+			{
+				mnuFileSaveCaptionsAs.Enabled = true;
+			}
 		}
 		//*-----------------------------------------------------------------------*
 
@@ -6689,7 +6900,6 @@ namespace CaptionAll
 				builder.AppendLine("WEBVTT");
 				builder.AppendLine("Kind: captions");
 				builder.AppendLine("Source: CaptionAll Closed Caption Editor");
-				//	TODO: Post current application version in file data.
 				builder.Append("Source Version: ");
 				builder.AppendLine($"{typeof(frmMain).Assembly.GetName().Version}");
 				builder.AppendLine("");
@@ -6728,9 +6938,13 @@ namespace CaptionAll
 					File.WriteAllText(mCaptionFilename, builder.ToString());
 				}
 				catch { }
+				captionEditor.Captions.Changed = false;
+				mnuFileSaveCaptions.Enabled = false;
 			}
-			captionEditor.Captions.Changed = false;
-			mnuFileSaveCaptions.Enabled = false;
+			else
+			{
+				mnuFileSaveCaptionsAs_Click(this, new EventArgs());
+			}
 		}
 		//*-----------------------------------------------------------------------*
 
