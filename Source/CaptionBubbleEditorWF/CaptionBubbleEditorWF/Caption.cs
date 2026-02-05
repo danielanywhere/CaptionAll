@@ -679,6 +679,7 @@ namespace CaptionBubbleEditorWF
 		public void RecalculateChain()
 		{
 			double x = 0;
+			CaptionItem item = null;
 
 			if(this.Count > 0)
 			{
@@ -687,6 +688,25 @@ namespace CaptionBubbleEditorWF
 				{
 					captionItem.X = x;
 					x += captionItem.Width;
+				}
+				if(x < Duration)
+				{
+					item = this[^1];
+					if(item.EntryType == CaptionEntryTypeEnum.Normal)
+					{
+						//	Add a space to pad the duration.
+						this.Add(new CaptionItem()
+						{
+							EntryType = CaptionEntryTypeEnum.Space,
+							Width = Duration - x,
+							X = x
+						});
+					}
+					else
+					{
+						//	The last item is a space. Extend it.
+						item.Width = Duration - item.X;
+					}
 				}
 			}
 		}
