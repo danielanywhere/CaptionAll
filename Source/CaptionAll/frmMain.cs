@@ -2714,12 +2714,40 @@ namespace CaptionAll
 										}
 									}
 									captionNext = captions.FirstOrDefault(x =>
-										x.X > captionNew.X);
+										x.X >= captionNew.X &&
+										x.X + x.Width > captionNew.X + captionNew.Width);
 									if(captionNext != null)
 									{
 										//	A next item exists.
 										index = captions.IndexOf(captionNext);
-										if(captionNew.X + captionNew.Width > captionNext.X)
+										if(captionNew.X == captionNext.X)
+										{
+											//	This the new caption is being inserted directly at
+											//	the start of the previous one.
+											right = captionNew.X + captionNew.Width;
+											captionNext.X = right;
+											undo.Supports.Add(new UndoSupportItem()
+											{
+												Action = ActionTypeEnum.EditCaptionX,
+												Caption = captionNext,
+												Index = index
+											});
+											if(mRippleMode)
+											{
+												captionEditor.Captions.RecalculateChain();
+											}
+											else
+											{
+												captionNext.Width -= captionNew.Width;
+												undo.Supports.Add(new UndoSupportItem()
+												{
+													Action = ActionTypeEnum.EditCaptionWidth,
+													Caption = captionNext,
+													Index = index
+												});
+											}
+										}
+										else if(captionNew.X + captionNew.Width > captionNext.X)
 										{
 											captionNew.Width =
 												Math.Max(0.25d, (Math.Min(caption.Width,
@@ -3591,7 +3619,6 @@ namespace CaptionAll
 				else
 				{
 					//	There is no caption under the mouse or within the selection.
-
 					undo = new UndoItem()
 					{
 						Action = ActionTypeEnum.InsertCaption
@@ -3627,6 +3654,7 @@ namespace CaptionAll
 						mUndoStack.Add(undo);
 						captionEditor.Invalidate();
 					}
+					captionEditor.Captions.RecalculateChain();
 				}
 			}
 			mCaptionBusy = false;
