@@ -332,7 +332,9 @@ namespace CaptionBubbleEditorWF
 						case CaptionAreaEnum.Caption:
 							if(mCaptionSelected != null &&
 								seconds >= mCaptionLeftX &&
-								seconds <= mCaptionRightX)
+								(seconds <= mCaptionRightX ||
+								(mCaptionEditMode == CaptionEditModeEnum.Width &&
+								mRippleMode && seconds < Duration)))
 							{
 								switch(mCaptionEditMode)
 								{
@@ -352,7 +354,14 @@ namespace CaptionBubbleEditorWF
 										{
 											right = mCaptionPartner.X + mCaptionPartner.Width;
 											mCaptionPartner.X = seconds;
-											mCaptionPartner.Width = right - mCaptionPartner.X;
+											if(mRippleMode)
+											{
+												mCaptions.RecalculateChain();
+											}
+											else
+											{
+												mCaptionPartner.Width = right - mCaptionPartner.X;
+											}
 										}
 										break;
 								}
@@ -557,6 +566,9 @@ namespace CaptionBubbleEditorWF
 		//*-----------------------------------------------------------------------*
 		//*	Captions																															*
 		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="Captions">Captions</see>.
+		/// </summary>
 		private CaptionCollection mCaptions = new CaptionCollection();
 		/// <summary>
 		/// Get a reference to the collection of captions loaded.
@@ -585,6 +597,9 @@ namespace CaptionBubbleEditorWF
 		//*-----------------------------------------------------------------------*
 		//*	DrawingLocation																												*
 		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="DrawingLocation">DrawingLocation</see>.
+		/// </summary>
 		private PointEv mDrawingLocation = new PointEv();
 		/// <summary>
 		/// Get a reference to the drawing location coordinate for this paintable
@@ -642,6 +657,9 @@ namespace CaptionBubbleEditorWF
 		//*-----------------------------------------------------------------------*
 		//*	DrawingSize																														*
 		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="DrawingSize">DrawingSize</see>.
+		/// </summary>
 		private SizeEv mDrawingSize = new SizeEv();
 		/// <summary>
 		/// Get a reference to the paintable size dimensions for this object.
@@ -700,6 +718,9 @@ namespace CaptionBubbleEditorWF
 		//*-----------------------------------------------------------------------*
 		//*	Duration																															*
 		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="Duration">Duration</see>.
+		/// </summary>
 		private double mDuration = 0d;
 		/// <summary>
 		/// Get the duration of the media, in seconds.
@@ -766,6 +787,12 @@ namespace CaptionBubbleEditorWF
 		}
 		//*-----------------------------------------------------------------------*
 
+		//*-----------------------------------------------------------------------*
+		//* Height																																*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Get/Set the height of the drawing.
+		/// </summary>
 		public new int Height
 		{
 			get { return base.Height; }
@@ -775,7 +802,14 @@ namespace CaptionBubbleEditorWF
 				base.Height = value;
 			}
 		}
+		//*-----------------------------------------------------------------------*
 
+		//*-----------------------------------------------------------------------*
+		//* Left																																	*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Get/Set the left position of the drawing.
+		/// </summary>
 		public new int Left
 		{
 			get { return base.Left; }
@@ -785,6 +819,7 @@ namespace CaptionBubbleEditorWF
 				base.Left = value;
 			}
 		}
+		//*-----------------------------------------------------------------------*
 
 		//*-----------------------------------------------------------------------*
 		//*	LoadWaveform																													*
@@ -831,6 +866,12 @@ namespace CaptionBubbleEditorWF
 		}
 		//*-----------------------------------------------------------------------*
 
+		//*-----------------------------------------------------------------------*
+		//* Location																															*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Get/Set the current drawing location.
+		/// </summary>
 		public new Point Location
 		{
 			get
@@ -844,6 +885,7 @@ namespace CaptionBubbleEditorWF
 				base.Location = value;
 			}
 		}
+		//*-----------------------------------------------------------------------*
 
 		////*-----------------------------------------------------------------------*
 		////*	MasterLeft																														*
@@ -913,6 +955,9 @@ namespace CaptionBubbleEditorWF
 		//*-----------------------------------------------------------------------*
 		//*	MediaFilename																													*
 		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="MediaFilename">MediaFilename</see>.
+		/// </summary>
 		private string mMediaFilename = "";
 		/// <summary>
 		/// Get the filename of the currently assigned media file.
@@ -1081,6 +1126,9 @@ namespace CaptionBubbleEditorWF
 		//*-----------------------------------------------------------------------*
 		//*	PixelsPerSecond																												*
 		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="PixelsPerSecond">PixelsPerSecond</see>.
+		/// </summary>
 		private double mPixelsPerSecond = 80f;
 		/// <summary>
 		/// Get/Set the number of pixels to display per second of play time.
@@ -1095,6 +1143,9 @@ namespace CaptionBubbleEditorWF
 		//*-----------------------------------------------------------------------*
 		//*	Playhead																															*
 		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="Playhead">Playhead</see>.
+		/// </summary>
 		private double mPlayhead = 0d;
 		/// <summary>
 		/// Get/Set the current playhead position.
@@ -1181,8 +1232,29 @@ namespace CaptionBubbleEditorWF
 		//*-----------------------------------------------------------------------*
 
 		//*-----------------------------------------------------------------------*
+		//*	RippleMode																														*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="RippleMode">RippleMode</see>.
+		/// </summary>
+		private bool mRippleMode = false;
+		/// <summary>
+		/// Get/Set a value indicating whether the ripple mode is currently active
+		/// on this control.
+		/// </summary>
+		public bool RippleMode
+		{
+			get { return mRippleMode; }
+			set { mRippleMode = value; }
+		}
+		//*-----------------------------------------------------------------------*
+
+		//*-----------------------------------------------------------------------*
 		//*	SelectionEnd																													*
 		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="SelectionEnd">SelectionEnd</see>.
+		/// </summary>
 		private double mSelectionEnd = 0d;
 		/// <summary>
 		/// Get/Set the ending selection point, in seconds.
@@ -1220,6 +1292,9 @@ namespace CaptionBubbleEditorWF
 		//*-----------------------------------------------------------------------*
 		//*	SelectionStart																												*
 		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="SelectionStart">SelectionStart</see>.
+		/// </summary>
 		private double mSelectionStart = 0d;
 		/// <summary>
 		/// Get/Set the starting selection point, in seconds.
@@ -1254,6 +1329,12 @@ namespace CaptionBubbleEditorWF
 		public event EventHandler SelectionStartChanged;
 		//*-----------------------------------------------------------------------*
 
+		//*-----------------------------------------------------------------------*
+		//* Size																																	*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Get/Set the size of the drawing.
+		/// </summary>
 		public new System.Drawing.Size Size
 		{
 			get { return base.Size; }
@@ -1264,7 +1345,14 @@ namespace CaptionBubbleEditorWF
 				base.Size = value;
 			}
 		}
+		//*-----------------------------------------------------------------------*
 
+		//*-----------------------------------------------------------------------*
+		//* Top																																		*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Get/Set the top position of the drawing.
+		/// </summary>
 		public new int Top
 		{
 			get { return base.Top; }
@@ -1274,6 +1362,7 @@ namespace CaptionBubbleEditorWF
 				base.Top = value;
 			}
 		}
+		//*-----------------------------------------------------------------------*
 
 		//*-----------------------------------------------------------------------*
 		//* UpdateWidth																														*
@@ -1300,6 +1389,9 @@ namespace CaptionBubbleEditorWF
 		//*-----------------------------------------------------------------------*
 		//*	WaveformBitmap																												*
 		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="WaveformBitmap">WaveformBitmap</see>.
+		/// </summary>
 		private Bitmap mWaveformBitmap = null;
 		/// <summary>
 		/// Get/Set a reference to the rendered waveform bitmap for this instance.
@@ -1317,6 +1409,9 @@ namespace CaptionBubbleEditorWF
 		//*-----------------------------------------------------------------------*
 		//*	WaveformHeight																												*
 		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="WaveformHeight">WaveformHeight</see>.
+		/// </summary>
 		private int mWaveformHeight = 100;
 		/// <summary>
 		/// Get/Set the height of the waveform display, when active.
@@ -1340,6 +1435,9 @@ namespace CaptionBubbleEditorWF
 		//*-----------------------------------------------------------------------*
 		//*	WaveformVisible																												*
 		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="WaveformVisible">WaveformVisible</see>.
+		/// </summary>
 		private bool mWaveformVisible = true;
 		/// <summary>
 		/// Get/Set a value indicating whether the waveform is visible.
@@ -1351,6 +1449,12 @@ namespace CaptionBubbleEditorWF
 		}
 		//*-----------------------------------------------------------------------*
 
+		//*-----------------------------------------------------------------------*
+		//* Width																																	*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Get/Set the width of the drawing.
+		/// </summary>
 		public new int Width
 		{
 			get { return base.Width; }
@@ -1360,6 +1464,7 @@ namespace CaptionBubbleEditorWF
 				base.Width = value;
 			}
 		}
+		//*-----------------------------------------------------------------------*
 
 	}
 	//*-------------------------------------------------------------------------*

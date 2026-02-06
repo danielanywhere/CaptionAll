@@ -91,7 +91,7 @@ namespace CaptionAll
 		private bool mPlayheadBusy = false;
 		private double mPlayheadLast = 0d;
 		//private bool mResizeMode = false;
-		private bool mRippleMode = false;
+		//private bool mRippleMode = false;
 		private bool mSelectionBusy = false;
 		private bool mStatusBusy = false;
 		private bool mStripMouseDown = false;
@@ -1504,8 +1504,8 @@ namespace CaptionAll
 			CaptionItem captionPrev = null;
 			CaptionCollection captions = captionEditor.Captions;
 			int index = 0;
-			double r = 0d;
-			double w = 0d;
+			double right = 0d;
+			double width = 0d;
 
 			if(caption == null)
 			{
@@ -1596,22 +1596,22 @@ namespace CaptionAll
 			{
 				//	Caption was provided and split location is in range.
 				index = captions.IndexOf(caption);
-				r = caption.X + caption.Width;
-				w = r - x;
+				right = caption.X + caption.Width;
+				width = right - x;
 				undo.Supports.Add(new UndoSupportItem()
 				{
 					Action = ActionTypeEnum.EditCaptionProperties,
 					Caption = caption,
 					Index = index
 				});
-				caption.Width -= w;
+				caption.Width -= width;
 				index++;
 				if(entryType == CaptionEntryTypeEnum.Space)
 				{
 					captionNew = new CaptionItem()
 					{
 						EntryType = CaptionEntryTypeEnum.Space,
-						Width = w,
+						Width = width,
 						X = x
 					};
 				}
@@ -1621,7 +1621,7 @@ namespace CaptionAll
 					{
 						EntryType = CaptionEntryTypeEnum.Normal,
 						Text = "New caption",
-						Width = w,
+						Width = width,
 						X = x
 					};
 				}
@@ -2534,7 +2534,7 @@ namespace CaptionAll
 			int index = 0;
 			double right = 0d;
 			CaptionSelectionAreaEnum selectionStyle = CaptionSelectionAreaEnum.None;
-			double w = 0d;
+			double width = 0d;
 
 			if(caption != null)
 			{
@@ -2640,7 +2640,7 @@ namespace CaptionAll
 						}
 					}
 
-					w = (mRippleMode ?
+					width = (mRippleMode ?
 						caption.Width : Math.Max(caption.Width / 2d, 0.25d));
 					if(entryType == CaptionEntryTypeEnum.Normal)
 					{
@@ -2648,7 +2648,7 @@ namespace CaptionAll
 						{
 							EntryType = CaptionEntryTypeEnum.Normal,
 							Text = caption.Text,
-							Width = w,
+							Width = width,
 							X = caption.X
 						};
 					}
@@ -2657,7 +2657,7 @@ namespace CaptionAll
 						captionNew = new CaptionItem()
 						{
 							EntryType = CaptionEntryTypeEnum.Space,
-							Width = w,
+							Width = width,
 							X = caption.X
 						};
 					}
@@ -2783,7 +2783,7 @@ namespace CaptionAll
 									Caption = captionPrev,
 									Index = index
 								});
-								captionPrev.Width += w;
+								captionPrev.Width += width;
 								captionNew = captionPrev;
 								index = captions.IndexOf(caption);
 								if(mRippleMode)
@@ -2801,7 +2801,7 @@ namespace CaptionAll
 										Index = index
 									});
 
-									caption.X += w;
+									caption.X += width;
 									caption.Width = right - caption.X;
 								}
 								break;
@@ -2875,7 +2875,21 @@ namespace CaptionAll
 					allowMouse: false, allowPlayhead: false);
 				if(captionRef != null)
 				{
-					captionNew = InsertCaptionOnSelectedItem(entryType, captionRef, undo);
+					//	An item is selected.
+					if(Playhead >= captionRef.X &&
+						Playhead <= captionRef.X + captionRef.Width)
+					{
+						//	If the playhead is present, then insert at playhead.
+						captionNew =
+							InsertCaptionAtSplit(entryType, captionRef,
+							selectionStart, undo);
+					}
+					else
+					{
+						//	If the playhead is somewhere else, then split in the middle.
+						captionNew = InsertCaptionOnSelectedItem(entryType, captionRef,
+							undo);
+					}
 				}
 			}
 			if(captionRef == null)
@@ -3023,6 +3037,7 @@ namespace CaptionAll
 			{
 				mUndoStack.Add(undo);
 			}
+			captionEditor.Captions.RecalculateChain();
 			captionEditor.Invalidate();
 			mCaptionBusy = false;
 			return captionNew;
@@ -3385,7 +3400,7 @@ namespace CaptionAll
 			CaptionItem partnerPrev = null;
 			double right = 0d;
 			UndoItem undo = new UndoItem();
-			double w = 0d;
+			double width = 0d;
 			double x = 0d;
 
 			mCaptionBusy = true;
@@ -3394,7 +3409,7 @@ namespace CaptionAll
 			if(caption != null)
 			{
 				x = caption.X;
-				w = caption.Width;
+				width = caption.Width;
 				partnerPrev = captionEditor.Captions.GetPrevious(caption);
 				if(partnerPrev != null)
 				{
@@ -6867,6 +6882,27 @@ namespace CaptionAll
 		//*-----------------------------------------------------------------------*
 
 		//*-----------------------------------------------------------------------*
+		//*	RippleMode																														*
+		//*-----------------------------------------------------------------------*
+		/// <summary>
+		/// Private member for <see cref="RippleMode">RippleMode</see>.
+		/// </summary>
+		private bool mRippleMode = false;
+		/// <summary>
+		/// Get/Set a value indicating whether ripple mode is currently active.
+		/// </summary>
+		public bool RippleMode
+		{
+			get { return mRippleMode; }
+			set
+			{
+				mRippleMode = value;
+				captionEditor.RippleMode = value;
+			}
+		}
+		//*-----------------------------------------------------------------------*
+
+		//*-----------------------------------------------------------------------*
 		//* RippleOnOff																														*
 		//*-----------------------------------------------------------------------*
 		/// <summary>
@@ -6874,7 +6910,7 @@ namespace CaptionAll
 		/// </summary>
 		private void RippleOnOff()
 		{
-			mRippleMode = !mRippleMode;
+			RippleMode = !mRippleMode;
 			mnuEditRippleOnOff.Checked = mRippleMode;
 		}
 		//*-----------------------------------------------------------------------*
@@ -8117,7 +8153,6 @@ namespace CaptionAll
 		}
 		//*-----------------------------------------------------------------------*
 
-		//	TODO: Test to see whether it is okay for frmMain duration to reflect CaptionEditor.
 		//*-----------------------------------------------------------------------*
 		//*	Duration																															*
 		//*-----------------------------------------------------------------------*
