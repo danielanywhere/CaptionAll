@@ -1,17 +1,6 @@
 #define MyAppName "CaptionAll"
 #define MyAppVersion "26.2201.4241"
 
-
-
-
-
-
-
-
-
-
-
-
 #define MyAppPublisher "Daniel Patterson, MCSD (danielanywhere)"
 #define MyAppURL "https://powermake.systems"
 #define MyAppExeName "CaptionAll.exe"
