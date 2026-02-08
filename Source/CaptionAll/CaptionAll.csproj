@@ -9,7 +9,7 @@
 				<UseWPF>True</UseWPF>
     <ImplicitUsings>disable</ImplicitUsings>
     <RootNamespace>CaptionAll</RootNamespace>
-    <VersionPrefix>26.2207.3625</VersionPrefix>
+    <VersionPrefix>26.2207.4649</VersionPrefix>
     <ApplicationIcon>CaptionAllIcon.ico</ApplicationIcon>
     <Platforms>AnyCPU;x64</Platforms>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
