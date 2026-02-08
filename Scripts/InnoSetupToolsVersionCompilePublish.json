@@ -1,5 +1,6 @@
 {
 	"ProjectBuildLevel": "NETInstallIncluded",
+	"NETMajorVersion": 6,
 	"WorkingPath": "C:\\Files\\Dropbox\\Develop\\Shared\\CaptionAll",
 	"CSharpProjectFilename": "Source\\CaptionAll\\CaptionAll.csproj",
 	"ExeFilename": "Source\\CaptionAll\\bin\\Release\\net6.0-windows\\win-x64\\CaptionAll.exe",

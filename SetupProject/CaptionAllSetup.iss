@@ -10,6 +10,7 @@
 #define IconPath DevelopPath + "\Source\" + MyAppName
 #define IconFilename "CaptionAllIcon.ico"
 #define OutputPath "C:\Files\Dropbox\Setups"
+#define DotnetRuntimeInstallerName "windowsdesktop-runtime-6.0.36-win-x64.exe"
 
 [Setup]
 PrivilegesRequired=admin
@@ -82,6 +83,9 @@ Source: "{#SourcePath}\taglib-sharp.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourcePath}\TitleBarWF.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourcePath}\windowsdesktop-runtime-10.0.2-win-x64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
 Source: "{#SourcePath}\WPFSVLCore.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourcePath}\CaptionAll.deps.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourcePath}\CaptionAll.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
+
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#IconFilename}"
@@ -92,3 +96,190 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFil
 Filename: "{tmp}\windowsdesktop-runtime-10.0.2-win-x64.exe"; Parameters: "/install /quiet /norestart"; Check: NeedsDotNet
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[Code]
+{ Auto-generated code }
+function GetLineCount(const S: string): Integer;
+var
+  I: Integer;
+begin
+  Result := 1;
+  for I := 1 to Length(S) do
+  begin
+    if S[I] = #10 then
+      Result := Result + 1;
+  end;
+end;
+
+{ Auto-generated code }
+function GetLine(const S: string; LineNumber: Integer): string;
+var
+  I, Count: Integer;
+  StartPos: Integer;
+begin
+  Count := 1;
+  StartPos := 1;
+
+  for I := 1 to Length(S) do
+  begin
+    if S[I] = #10 then
+    begin
+      if Count = LineNumber then
+      begin
+        Result := Trim(Copy(S, StartPos, I - StartPos));
+        Exit;
+      end;
+
+      Count := Count + 1;
+      StartPos := I + 1;
+    end;
+  end;
+
+  if Count = LineNumber then
+    Result := Trim(Copy(S, StartPos, Length(S) - StartPos + 1))
+  else
+    Result := '';
+end;
+
+{ Auto-generated code }
+function PosEx(const SubStr, S: string; Offset: Integer): Integer;
+var
+  I: Integer;
+begin
+  Result := 0;
+
+  if Offset < 1 then
+    Offset := 1;
+
+  for I := Offset to (Length(S) - Length(SubStr) + 1) do
+  begin
+    if Copy(S, I, Length(SubStr)) = SubStr then
+    begin
+      Result := I;
+      Exit;
+    end;
+  end;
+end;
+
+{ Auto-generated code }
+function ExecAndCaptureOutput(const Cmd, Params: string; var Output: string): Boolean;
+var
+  TempFile: string;
+  ResultCode: Integer;
+  Buffer: AnsiString;
+begin
+  Log('ExecAndCaptureOutput...');
+
+  TempFile := ExpandConstant('{tmp}\dotnet_output.txt');
+
+  Log(' Preparing to call ' + Cmd + ' ' + Params + ' > "' + TempFile + '" 2>&1');
+
+  { // Inno Setup Exec signature: }
+  { // Exec(Filename, Params, WorkingDir, ShowCmd, Wait, ResultCode) }
+  {
+    if Exec(Cmd, Params + ' > "' + TempFile + '" 2>&1', '', SW_HIDE,
+          ewWaitUntilTerminated, ResultCode) then
+  }
+  {
+    if Exec('cmd.exe', '/k ' + Cmd + ' ' + Params + ' > "' + TempFile + '" 2>&1', '', SW_SHOW,
+          ewWaitUntilTerminated, ResultCode) then
+  }
+  if Exec('cmd.exe',
+    '/c ' + Cmd + ' ' + Params + ' > "' + TempFile + '" 2>&1"',
+    '',
+    SW_HIDE,
+    ewWaitUntilTerminated,
+    ResultCode) then
+  begin
+    if LoadStringFromFile(TempFile, Buffer) then
+    begin
+      Output := Buffer;
+      Result := True;
+      Exit;
+    end;
+  end;
+
+  Output := '';
+  Result := False;
+end;
+
+{ Auto-generated code }
+function ExtractMajorVersionFromInstaller(const FileName: string): Integer;
+var
+  VersionStart, DotPos: Integer;
+  VersionStr: string;
+begin
+  Log('ExtractMajorVersionFromInstaller...');
+
+  {
+    Version begins at position 24 in patterns like:
+    windowsdesktop-runtime-6.0.36-win-x64.exe
+    windowsdesktop-runtime-10.0.2-win-x64.exe
+  }
+  VersionStart := 24;
+
+  { Find the first '.' after the version start }
+  DotPos := PosEx('.', FileName, VersionStart);
+
+  if (DotPos > VersionStart) then
+  begin
+    VersionStr := Copy(FileName, VersionStart, DotPos - VersionStart);
+    Result := StrToIntDef(VersionStr, 0);
+  end
+  else
+    { Fallback if pattern unexpected. }
+    Result := 0;
+end;
+
+{ Auto-generated code }
+function IsDotnetRuntimeInstalled(MajorVersion: Integer): Boolean;
+var
+  Output, Line: string;
+  I: Integer;
+begin
+  Result := False;
+
+  Log('IsDotnetRuntimeInstalled...');
+
+  if not ExecAndCaptureOutput('dotnet', '--list-runtimes', Output) then
+  begin
+    Log(' Could not capture output from dotnet --list-runtimes');
+    Exit;
+  end;
+
+  I := 1;
+  while I <= GetLineCount(Output) do
+  begin
+    Line := GetLine(Output, I);
+
+    Log('Reading line: ' + Line);
+
+    if Pos('Microsoft.WindowsDesktop.App ' + IntToStr(MajorVersion) + '.', Line) = 1 then
+    begin
+      Log(' Line found...');
+      Result := True;
+      Exit;
+    end;
+
+    I := I + 1;
+  end;
+end;
+
+{ Auto-generated code }
+function NeedsDotNet(): Boolean;
+var
+  Major: Integer;
+begin
+  Log('NeedsDotNet...');
+
+  Major := ExtractMajorVersionFromInstaller('{#DotnetRuntimeInstallerName}');
+  Log(Format(' Major .NET Version: %d', [Major]));
+
+  if Major = 0 then
+  begin
+    Log('Error: Unable to determine .NET major version from installer name: ' + '{#DotnetRuntimeInstallerName}');
+    Result := True;
+    Exit;
+  end;
+
+  Result := not IsDotnetRuntimeInstalled(Major);
+end;
