@@ -1,78 +1,76 @@
 CaptionAll - Getting Started Guide
 By Daniel Patterson
-Last Revised: 02/06/2026
+Last Revised: 02/09/2026
 
 Introduction
 CaptionAll is a high-performance closed-captioning editor designed for speed, precision, and smooth media interaction.
-This application was originally written to achieve blazing productivity at perfect quality while creating captions from scratch for video or audio media. Used in conjunction with AI captioning services, CaptionAll is even more useful as a tool for achieving and delivering perfect timing and acuity on every project.
+This application was originally written to achieve blazing productivity at perfect quality while creating captions from scratch for video or audio media. When used in conjunction with AI captioning services, CaptionAll is even more useful as a tool for achieving and delivering perfect timing and acuity on every project.
 
 Following are only some of the key capabilities at a glance.
 
-    • Timeline editing.
-    • Bubble positioning.
-    • Ripple mode.
-    • Speed-dial text.
-    • Project handling.
-    • VTT support.
+    ï¿½ Timeline editing.
+    ï¿½ Bubble positioning.
+    ï¿½ Ripple mode.
+    ï¿½ Speed-dial text.
+    ï¿½ Project handling.
+    ï¿½ VTT support.
 
 License and Source Repository
 This software is distributed as open-source under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007. You can find the source code at https://github.com/danielanywhere/CaptionAll
 
-
 Understanding the Workspace
 CaptionAll's workspace is oriented toward providing a large video preview area and large timer at the top, bordered on the bottom by a caption bubble stream oriented horizontally in a timeline-style.
 
-View Preview
-The video preview is the most predominant area of the main form, providing a large, comfortable viewing area.
-The video preview automatically sizes to occupy the maximum available space, retaining its original shape at all sizes.
+Video Preview
+The video preview is the most predominant area of the main form, providing a large, comfortable viewing area. The area automatically sizes to occupy the maximum available space, retaining the original video shape at all sizes.
 
 
-The above image depicts the size of the video preview in a full screen view, while the following image shows the save video preview in a much smaller screen view.
+The above image depicts the size of the video preview in a full screen view, while the following image shows the same video preview in a much smaller screen view.
 
 
 
 Caption Timeline
 The caption timeline is the portion of the editor that displays both the timeline and the caption bubbles in an aligned relationship.
-As can be seen in the previous image, there are two horizontal bars in the caption timeline, the timeline bar at the top, and the caption bar at the bottom.
+The above image illustrates two horizontal bars in the caption timeline, the timeline bar at the top of the section, and the caption bar at the bottom.
 
 Playhead
 The playhead is a small vertical line in the timeline bar indicating the specific active location in time. Click anywhere in the timeline bar to set it.
 
 Selection Area
 The selection area is also located in the timeline bar. Following are the mouse behaviors recognized there.
-    • Single click. Any selected area is cleared and the playhead pointer is moved to that position. Any selected caption bubbles, if present, remain selected.
-    • Click and drag right. The playhead pointer is positioned at the beginning of the selection and the selected area is extended to the point where you release the mouse button.
-    • Right-click. Display the caption editing context menu.
+    ï¿½ Single click. Any selected area is cleared and the playhead pointer is moved to that position. Any selected caption bubbles, if present, remain selected.
+    ï¿½ Click and drag right. The playhead pointer is positioned at the beginning of the selection and the selected area is extended to the point where you release the mouse button.
+    ï¿½ Right-click. Display the caption editing context menu.
 
 Caption Bubbles
 Each of the rounded rectangular entries on the caption bar represents a text area. One text entry at a time can be explicitly selected, and the selection state of a text entry can be slightly different than a selected area on the timeline, depending upon the activity.
 Following are the mouse behaviors recognized on text objects.
-    • Single click. Toggle the selection state of this entry. Text item selection is exclusive. When this item is going from an unselected to a selected state, all of the other entries on the timeline will be unselected.
-    • Click and drag near left side of item. Adjust the starting position of the caption, and if present, the ending position of the connected caption to the left.
-    • Click and drag near right side of item. Adjust the ending position of the caption, and if present, the starting position of the connected caption to the right.
-    • Double-click. Open the Caption Properties dialog on the caption.
-    • Right-click. Display the caption editing context menu.
+    ï¿½ Single click. Toggle the selection state of this entry. Text item selection is exclusive. When the state changes from unselected to selected, all of the other entries on the timeline are unselected.
+    ï¿½ Click and drag near left side of item. Adjust the starting position of the caption, and if present, the ending position of the connected caption to the left.
+    ï¿½ Click and drag near right side of item. Adjust the ending position of the caption, and if present, the starting position of the connected caption to the right.
+    ï¿½ Double-click. Open the Caption Properties dialog on the caption.
+    ï¿½ Right-click. Display the caption editing context menu.
 
 Caption Editing Menus
 The caption editing menu is the central focus of tasks and activities while editing anywhere on the caption timeline.
 The following commands, available in the caption editing context menu, or in the Edit / Caption and Edit / Selection menus are currently available.
-Note that many of the following actions are affected by the status of ripple mode. When ripple mode is off, all changes take place in a local context. When ripple mode is on, in contrast, the results actions can move all items to the right of the affected either right or left. For example, when deleting a 1 second caption with ripple mode turned on, all entries to the right of the deleted item will be shifted to the left by 1 second.
-    • Caption Text [F2]. Add or edit caption text at the currently selected area or caption.
-    • Caption Width [Ctrl+W]. Adjust the width of the selected caption.
-    • Insert Space [Ctrl+Shift+I]. Insert a space into the selected space within a caption or across two captions, splitting the caption(s) into two separated units.
-    • Split Caption [Ctrl+I]. Split the caption at the current playhead position into two separate and connected pieces.
-    • Toggle Caption | Space [Ctrl+G]. If a caption is selected, that item is converted to a space. Alternatively, if space is selected using the following steps, the space between two captions is converted into a text caption.
+Note that many of the following actions are affected by the status of ripple mode. When ripple mode is off, all changes take place in a local context. When ripple mode is on, in contrast, mouse actions can move all items to the right of the affected item either right or left. For example, when deleting a 1 second caption with ripple mode turned on, all entries to the right of the deleted item will be shifted to the left by 1 second.
+    ï¿½ Caption Text [F2]. Add or edit caption text at the currently selected area or caption.
+    ï¿½ Caption Width [Ctrl+W]. Adjust the width of the selected caption.
+    ï¿½ Insert Space [Ctrl+Shift+I]. Insert a space into the selected space within a caption or across two captions, splitting the caption(s) into two separated units.
+    ï¿½ Split Caption [Ctrl+I]. Split the caption at the current playhead position into two separate and connected pieces.
+    ï¿½ Toggle Caption | Space [Ctrl+G]. If a caption is selected, that item is converted to a space. Alternatively, if space is selected using the following steps, the space between two captions is converted into a text caption.
         ? Steps to convert space to caption:
             ? Select an area of blank space.
             ? Single click in the blank caption area under the selected range.
             ? Right-click and from the context menu, select Toggle Caption | Space.
-    • Remove Space [Ctrl+R]. Remove the space between two captions, joining the end of the right item to the start of the left item.
-    • Merge Captions [Ctrl+M]. Merge the contents of two or more captions in the selected area, combining their text.
-    • Delete Caption [Ctrl+D]. Delete one or more selected captions.
-    • Caption Properties [Ctrl+Enter]. Set the properties of the caption, including position, width, text, and whether to treat this item as a space.
-    • Select None [Ctrl+Shift+A]. Clear the selected area and remove any explicit item selection from the selected caption.
-    • Select Time from Caption [Ctrl+Shift+T]. Use the currently selected caption as the currently selected range.
-    • Snap Caption to Selection [Ctrl+E]. Adjust the start position and width of the caption under the selected range to the start position and width of that range.
+    ï¿½ Remove Space [Ctrl+R]. Remove the space between two captions, joining the end of the right item to the start of the left item.
+    ï¿½ Merge Captions [Ctrl+M]. Merge the contents of two or more captions in the selected area, combining their text.
+    ï¿½ Delete Caption [Ctrl+D]. Delete one or more selected captions.
+    ï¿½ Caption Properties [Ctrl+Enter]. Set the properties of the caption, including position, width, text, and whether to treat this item as a space.
+    ï¿½ Select None [Ctrl+Shift+A]. Clear the selected area and remove any explicit item selection from the selected caption.
+    ï¿½ Select Time from Caption [Ctrl+Shift+T]. Use the currently selected caption as the currently selected range.
+    ï¿½ Snap Caption to Selection [Ctrl+E]. Adjust the start position and width of the caption under the selected range to the start position and width of that range.
 
 Keyboard-Accelerated Workflow
 Most command actions have associated keyboard shortcuts, allowing you to accelerate your workflow significantly over other caption editors. See the Keyboard Shortcut List appendix for a complete list of available shortcut keys.
@@ -81,14 +79,14 @@ Using Undo
 CaptionAll is very forgiving if you change your mind or make a mistake and want to go back a few steps. Any time you want to reverse an action you've made, either press [Ctrl+Z] or select the menu option Edit / Undo (Recent action name).
 
 Projects versus Raw Caption and Media Files
-In this application, the project file is a completely separate file, not affecting the caption or media file at all, but allowing you to create and maintain a cross-reference between the caption and media files, allowing them both to be loaded or unloaded simultaneously.
-When the changes on a project file are saved, any changes to the caption file are saved along with whatever changes there might have been to the selected media or caption source files since the last save was performed.
+In this application, the project file is a completely separate and passive information file, not affecting the captions or media at all, but instead, allowing you to create and maintain a cross-reference between those files that allows you to load or unload related files simultaneously for convenience.
+When the changes on a project file are saved, any changes to the caption file are saved along with whatever changes there might have been to file associations since the last save was performed.
 
 A Sample Workflow: Creating and Editing Captions
-Possibly the best way to visualize our extremely fast workflow in action is to run through an actual activity where we are going to create the captions from scratch.
+Possibly the best way to visualize a productive workflow in action is to run through an actual activity where we are going to create the captions from scratch.
 
 Load Your Media
-With media loaded, you have more of a visual cue by which to insert your captions. An extremely fast way to define captions for media is to bulk select an entire pulse area, like so.
+With media loaded, you have more of a visual cue by which to insert your captions. One quick way to define captions for media is to bulk select an entire pulse area, like so.
 
 
 
@@ -111,7 +109,7 @@ Double-click the second caption to edit its text, then press [Enter].
 ... to result in your first completed audio pulse.
 
 
-Multiply that by process approximately 100 times and that's about all there is to creating a complete caption file for a media session. Save your caption file on multiple occassions while in progress so a power outage won't spoil your progress.
+Multiply the above process by approximately 100 times and that's about all there is to creating a complete caption file for a media session. Save your caption file on multiple occasions while in progress so a power outage won't spoil your progress.
 
 
 Appendices
@@ -160,43 +158,43 @@ Following is a list of all of the available menu options with brief descriptions
 
 Main Form
 This is the list of menu options found on the main form.
-    • File / New. Clear the media, captions, and workspace to start work on a different set of files.
-    • File / Load Project. Load a predefined CaptionAll project file (*.captionproject.json).
-    • File / Save Project. Save information about the currently loaded media and caption files so they can be loaded again quickly in the future. Note that when using a project, the media and caption files remain separate.
-    • File / Save Project As. Using a new name, save information about the currently loaded media and caption files so they can be loaded again quickly in the future.
-    • File / Open Captions. Open a caption file for viewing or editing.
-    • File / Save Captions. Save the changes to the currently loaded caption file, creating a new file if it had not yet been saved.
-    • File / Save Captions As. Save the changes to the currently loaded caption file under a new filename.
-    • File / Open Media. Open a video or audio file for captioning reference.
-    • File / Exit. Exit CaptionAll.
-    • Edit / Undo. Reverse the last-known action.
-    • Edit / Find. Find text in the first matching caption. Match is case-insensitive.
-    • Edit / Find Again. Find the next caption containing matching text.
-    • Edit / Find and Replace. Find, and optionally, replace instances of text with another value. Match is case-insensitive.
-    • Edit / Ripple On | Off. Toggle ripple mode on and off.
-    • Edit / Speed Dial List. Enter up to 9 separate text values that can be inserted at the cursor in your caption text by pressing a shortcut key [Ctrl+1] through [Ctrl+9].
-    • Edit / Caption / Caption Text. Edit the currently selected caption or insert a new caption in the selection.
-    • Edit / Caption / Caption Width. Precisely set the width of the selected caption, in seconds.
-    • Edit / Caption / Insert Space. Insert a space into a caption, splitting it if a single caption is selected. Otherwise, if multiple captions are selected, insert the selected amount of space between them.
-    • Edit / Caption / Split Caption. Split the selected caption at the playhead.
-    • Edit / Caption / Toggle Caption | Space. Convert a text caption to space or visa versa.
-    • Edit / Caption / Merge Captions. Merge two or more selected captions.
-    • Edit / Caption / Delete Caption. Delete one or more selected captions.
-    • Edit / Caption / Caption Properties. Edit the properties of the first selected caption.
-    • Edit / Selection / Current Time. Set the current playhead time.
-    • Edit / Selection / Selection Start Time. Focus the cursor on the Selection Start textbox.
-    • Edit / Selection / Selection End Time. Focus the cursor on the Selection End textbox.
-    • Edit / Selection / Select None. Deselect the timeline range and any selected caption item.
-    • Edit / Selection / Select Time From Caption. Set the timeline bar selection from the currently selected caption.
-    • Edit / Selection / Snap Caption to Selection. Move and adjust the width of the caption within the timeline selection area to the left and right boundaries of that area.
-    • Edit / Set Track Duration. Set the master width of the caption track, overriding the width that was set when opening the media file.
-    • View / Center Cursor on Screen. Scroll the caption timeline view to the point where the current playhead position is horizontally in the middle of the screen.
-    • Transport / Stop. Stop playing loaded media and position the playhead at the beginning of the timeline.
-    • Transport / Go To Start. Reposition the playhead to the beginning of the timeline.
-    • Transport / Go Back 5 Seconds. Move the playhead to the left 5 seconds from the current time.
-    • Transport / Play | Pause (Space Key). Toggle between play and pause status.
-    • Transport / Go Forward 5 Seconds. Move the playhead to the right 5 seconds from the current time.
-    • Transport / Go To End. Reposition the playhead to the end of the timeline.
+    ï¿½ File / New. Clear the media, captions, and workspace to start work on a different set of files.
+    ï¿½ File / Load Project. Load a predefined CaptionAll project file (*.captionproject.json).
+    ï¿½ File / Save Project. Save information about the currently loaded media and caption files so they can be loaded again quickly in the future. Note that when using a project, the media and caption files remain separate.
+    ï¿½ File / Save Project As. Using a new name, save information about the currently loaded media and caption files so they can be loaded again quickly in the future.
+    ï¿½ File / Open Captions. Open a caption file for viewing or editing.
+    ï¿½ File / Save Captions. Save the changes to the currently loaded caption file, creating a new file if it has not yet been saved.
+    ï¿½ File / Save Captions As. Save the changes to the currently loaded caption file under a new filename.
+    ï¿½ File / Open Media. Open a video or audio file for captioning reference.
+    ï¿½ File / Exit. Exit CaptionAll.
+    ï¿½ Edit / Undo. Reverse the last-known action.
+    ï¿½ Edit / Find. Find text in the first matching caption. Match is case-insensitive.
+    ï¿½ Edit / Find Again. Find the next caption containing matching text.
+    ï¿½ Edit / Find and Replace. Find, and optionally, replace instances of text with another value. Match is case-insensitive.
+    ï¿½ Edit / Ripple On | Off. Toggle ripple mode on and off.
+    ï¿½ Edit / Speed Dial List. Enter up to 9 separate text values that can be inserted at the cursor in your caption text by pressing a shortcut key [Ctrl+1] through [Ctrl+9].
+    ï¿½ Edit / Caption / Caption Text. Edit the currently selected caption or insert a new caption in the selection.
+    ï¿½ Edit / Caption / Caption Width. Precisely set the width of the selected caption, in seconds.
+    ï¿½ Edit / Caption / Insert Space. Insert a space into a caption, splitting it if a single caption is selected. Otherwise, if multiple captions are selected, insert the selected amount of space between them.
+    ï¿½ Edit / Caption / Split Caption. Split the selected caption at the playhead.
+    ï¿½ Edit / Caption / Toggle Caption | Space. Convert a text caption to space or visa versa.
+    ï¿½ Edit / Caption / Merge Captions. Merge two or more selected captions.
+    ï¿½ Edit / Caption / Delete Caption. Delete one or more selected captions.
+    ï¿½ Edit / Caption / Caption Properties. Edit the properties of the first selected caption.
+    ï¿½ Edit / Selection / Current Time. Set the current playhead time.
+    ï¿½ Edit / Selection / Selection Start Time. Focus the cursor on the Selection Start textbox.
+    ï¿½ Edit / Selection / Selection End Time. Focus the cursor on the Selection End textbox.
+    ï¿½ Edit / Selection / Select None. Deselect the timeline range and any selected caption item.
+    ï¿½ Edit / Selection / Select Time From Caption. Set the timeline bar selection from the currently selected caption.
+    ï¿½ Edit / Selection / Snap Caption to Selection. Move and adjust the width of the caption within the timeline selection area to the left and right boundaries of that area.
+    ï¿½ Edit / Set Track Duration. Set the master width of the caption track, overriding the width that was set when opening the media file.
+    ï¿½ View / Center Cursor on Screen. Scroll the caption timeline view to the point where the current playhead position is horizontally in the middle of the screen.
+    ï¿½ Transport / Stop. Stop playing loaded media and position the playhead at the beginning of the timeline.
+    ï¿½ Transport / Go To Start. Reposition the playhead to the beginning of the timeline.
+    ï¿½ Transport / Go Back 5 Seconds. Move the playhead to the left 5 seconds from the current time.
+    ï¿½ Transport / Play | Pause (Space Key). Toggle between play and pause status.
+    ï¿½ Transport / Go Forward 5 Seconds. Move the playhead to the right 5 seconds from the current time.
+    ï¿½ Transport / Go To End. Reposition the playhead to the end of the timeline.
 
 Transport Controls
 Transport controls are the core buttons that let users move through audio or video. They provide quick, predictable ways to start, stop, pause, or navigate within media.
@@ -220,15 +218,15 @@ Icon	Name	Behavior
 
 Supported Caption File Formats
 The following caption file types are currently supported.
-    • WebVTT (*.vtt). Real-time editing, open, save.
-    • SubRip Subtitle (*.srt). Export only.
+    ï¿½ WebVTT (*.vtt). Real-time editing, open, save.
+    ï¿½ SubRip Subtitle (*.srt). Export only.
 
 Supported Media File Formats
 The following media file types are currently supported by the File / Open Media menu option.
-    • *.mp3. MPEG-3 audio files.
-    • *.mp4. MPEG-4 video files.
-    • *.m4a. MPEG-4 audio files.
-    • *.wav. PCM digital audio files.
+    ï¿½ *.mp3. MPEG-3 audio files.
+    ï¿½ *.mp4. MPEG-4 video files.
+    ï¿½ *.m4a. MPEG-4 audio files.
+    ï¿½ *.wav. PCM digital audio files.
 
 Glossary of Terms
 
@@ -239,10 +237,10 @@ Caption Bar
 The lower horizontal bar in the caption timeline that displays all caption bubbles in chronological order.
 
 Caption Bubble
-A rounded rectangular block representing a single caption’s text and timing. Each bubble can be selected, resized, split, merged, or edited.
+A rounded rectangular block representing a single captionï¿½s text and timing. Each bubble can be selected, resized, split, merged, or edited.
 
 Caption Properties
-A dialog window that allows editing of a caption’s text, timing, width, position, and whether it is treated as a caption or a space.
+A dialog window that allows editing of a captionï¿½s text, timing, width, position, and whether it is treated as a caption or a space.
 
 Caption Text
 The written content inside a caption bubble. It can be edited directly or via the Caption Text command.
@@ -251,13 +249,13 @@ Caption Timeline
 The combined visual area containing the timeline bar and caption bar, used for navigating and editing caption timing.
 
 Connected Captions
-Two captions that share a boundary. Adjusting one may affect the other, especially when ripple mode is enabled.
+Two captions that share a boundary. Adjusting the width of of the left item in the relationship directly adjusts the position of the right item. Conversely, adjusting the position of the right item in the relationship directly adjusts the width of the left item.
 
 Context Menu
 A right-click menu offering caption editing commands such as Split, Merge, Delete, or Toggle Caption | Space.
 
-Double-Click (Caption)
-An action that opens the Caption Properties dialog for the selected caption.
+Double-Click
+A quick action of the mouse consisting of the sequence click, release, then click and release again.
 
 Insert Space
 A command that inserts a gap between captions or splits a caption into two separate bubbles.
@@ -275,13 +273,13 @@ Pulse / Sub-Pulse
 A segment of audio used as a natural unit for captioning. Pulses help define where captions begin and end.
 
 Ripple Mode
-An editing mode where changes to one caption (such as deleting or resizing) automatically shift all captions to the right. When off, edits affect only the selected caption.
+An editing mode where changes to one caption (such as deleting or resizing) automatically shift all captions to the right. When off, edits affect only the selected caption and any connected partners.
 
 Selection Area
 A highlighted range on the timeline bar used to define a time span for editing actions such as snapping, splitting, or inserting.
 
 Snap Caption to Selection
-A command that adjusts a caption’s start and end times to match the boundaries of the selected timeline area.
+A command that adjusts a captionï¿½s start and end times to match the boundaries of the selected timeline area.
 
 Space (Caption Space)
 A non-text gap between two captions. Spaces can be inserted, removed, or converted into captions.
@@ -293,7 +291,7 @@ Split Caption
 A command that divides a single caption bubble into two separate captions at the playhead position.
 
 Timeline Bar
-The upper bar in the caption timeline that displays time markers and allows selection, playhead movement, and range selection.
+The upper bar in the caption timeline that displays time markers and allows range selection and playhead movement.
 
 Transport Controls
 Playback buttons (Play, Pause, Stop, Forward, Backward, Skip) used to navigate through media.
@@ -307,6 +305,4 @@ A caption file format supported for full editing, saving, and real-time updates.
 Width (Caption Width)
 The duration of a caption bubble, adjustable via dragging or the Caption Width command.
 
-
-Index
 
