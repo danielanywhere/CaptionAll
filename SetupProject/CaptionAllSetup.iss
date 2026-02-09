@@ -97,7 +97,7 @@ Filename: "{tmp}\windowsdesktop-runtime-10.0.2-win-x64.exe"; Parameters: "/insta
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [Code]
-{ Auto-generated code }
+{ Auto-generated function. Remove this tag to customize. }
 function GetLineCount(const S: string): Integer;
 var
   I: Integer;
@@ -110,7 +110,7 @@ begin
   end;
 end;
 
-{ Auto-generated code }
+{ Auto-generated function. Remove this tag to customize. }
 function GetLine(const S: string; LineNumber: Integer): string;
 var
   I, Count: Integer;
@@ -140,7 +140,7 @@ begin
     Result := '';
 end;
 
-{ Auto-generated code }
+{ Auto-generated function. Remove this tag to customize. }
 function PosEx(const SubStr, S: string; Offset: Integer): Integer;
 var
   I: Integer;
@@ -160,7 +160,7 @@ begin
   end;
 end;
 
-{ Auto-generated code }
+{ Auto-generated function. Remove this tag to customize. }
 function ExecAndCaptureOutput(const Cmd, Params: string; var Output: string): Boolean;
 var
   TempFile: string;
@@ -173,16 +173,6 @@ begin
 
   Log(' Preparing to call ' + Cmd + ' ' + Params + ' > "' + TempFile + '" 2>&1');
 
-  { // Inno Setup Exec signature: }
-  { // Exec(Filename, Params, WorkingDir, ShowCmd, Wait, ResultCode) }
-  {
-    if Exec(Cmd, Params + ' > "' + TempFile + '" 2>&1', '', SW_HIDE,
-          ewWaitUntilTerminated, ResultCode) then
-  }
-  {
-    if Exec('cmd.exe', '/k ' + Cmd + ' ' + Params + ' > "' + TempFile + '" 2>&1', '', SW_SHOW,
-          ewWaitUntilTerminated, ResultCode) then
-  }
   if Exec('cmd.exe',
     '/c ' + Cmd + ' ' + Params + ' > "' + TempFile + '" 2>&1"',
     '',
@@ -202,7 +192,7 @@ begin
   Result := False;
 end;
 
-{ Auto-generated code }
+{ Auto-generated function. Remove this tag to customize. }
 function ExtractMajorVersionFromInstaller(const FileName: string): Integer;
 var
   VersionStart, DotPos: Integer;
@@ -230,7 +220,7 @@ begin
     Result := 0;
 end;
 
-{ Auto-generated code }
+{ Auto-generated function. Remove this tag to customize. }
 function IsDotnetRuntimeInstalled(MajorVersion: Integer): Boolean;
 var
   Output, Line: string;
@@ -264,7 +254,7 @@ begin
   end;
 end;
 
-{ Auto-generated code }
+{ Auto-generated function. Remove this tag to customize. }
 function NeedsDotNet(): Boolean;
 var
   Major: Integer;
