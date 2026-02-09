@@ -1,5 +1,5 @@
 #define MyAppName "CaptionAll"
-#define MyAppVersion "26.2207.4649"
+#define MyAppVersion "26.2209.4408"
 
 #define MyAppPublisher "Daniel Patterson, MCSD (danielanywhere)"
 #define MyAppURL "https://powermake.systems"
@@ -10,7 +10,6 @@
 #define IconPath DevelopPath + "\Source\" + MyAppName
 #define IconFilename "CaptionAllIcon.ico"
 #define OutputPath "C:\Files\Dropbox\Setups"
-#define DotnetRuntimeInstallerName "windowsdesktop-runtime-6.0.36-win-x64.exe"
 
 [Setup]
 PrivilegesRequired=admin
@@ -51,8 +50,10 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
+Source: "{#SourcePath}\CaptionAll.deps.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourcePath}\CaptionAll.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourcePath}\CaptionAll.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#SourcePath}\CaptionAll.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourcePath}\CaptionAllIcon.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourcePath}\CaptionBubbleEditorWF.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourcePath}\DocumentFormat.OpenXml.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -81,11 +82,8 @@ Source: "{#SourcePath}\System.Drawing.Common.dll"; DestDir: "{app}"; Flags: igno
 Source: "{#SourcePath}\System.IO.Packaging.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourcePath}\taglib-sharp.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#SourcePath}\TitleBarWF.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourcePath}\windowsdesktop-runtime-10.0.2-win-x64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
+Source: "{#SourcePath}\windowsdesktop-runtime-6.0.36-win-x64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
 Source: "{#SourcePath}\WPFSVLCore.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourcePath}\CaptionAll.deps.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#SourcePath}\CaptionAll.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
-
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#IconFilename}"
@@ -93,7 +91,7 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; 
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#IconFilename}"; Tasks: desktopicon
 
 [Run]
-Filename: "{tmp}\windowsdesktop-runtime-10.0.2-win-x64.exe"; Parameters: "/install /quiet /norestart"; Check: NeedsDotNet
+Filename: "{tmp}\windowsdesktop-runtime-6.0.36-win-x64.exe"; Parameters: "/install /quiet /norestart"; Check: NeedsDotNet
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [Code]
@@ -261,12 +259,12 @@ var
 begin
   Log('NeedsDotNet...');
 
-  Major := ExtractMajorVersionFromInstaller('{#DotnetRuntimeInstallerName}');
+  Major := ExtractMajorVersionFromInstaller('windowsdesktop-runtime-6.0.36-win-x64.exe');
   Log(Format(' Major .NET Version: %d', [Major]));
 
   if Major = 0 then
   begin
-    Log('Error: Unable to determine .NET major version from installer name: ' + '{#DotnetRuntimeInstallerName}');
+    Log('Error: Unable to determine .NET major version from installer name: windowsdesktop-runtime-6.0.36-win-x64.exe');
     Result := True;
     Exit;
   end;
