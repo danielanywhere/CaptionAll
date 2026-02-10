@@ -6,6 +6,14 @@ An intuitive, easy-to-use, fast-action, precise closed-caption editor desktop ap
 
 <p>&nbsp;</p>
 
+## 🆕 Recent Updates
+
+This post coincides with the first GitHub-based release version of CaptionAll, **26.2209.4408**.
+
+The first version of the [CaptionAll Getting Started Guide](https://github.com/danielanywhere/CaptionAll/blob/main/Docs/CaptionAll-GettingStartedGuide.pdf) is available in the Docs folder of this repository, as **CaptionAll-GettingStartedGuide.pdf**.
+
+<p>&nbsp;</p>
+
 ## Current Features
 
 CaptionAll currently offers the following features.
