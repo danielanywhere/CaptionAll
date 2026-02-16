@@ -1,6 +1,9 @@
 /*
 * Copyright (c). 2020-2026 Daniel Patterson, MCSD (danielanywhere).
 * 
+* Contributions: Copyright (c). 2023 Jason Ge
+* https://jason-ge.medium.com/create-excel-using-openxml-in-net-6-3b601ddf48f7
+* 
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
